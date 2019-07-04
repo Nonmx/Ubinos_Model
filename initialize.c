@@ -1,7 +1,7 @@
 #include "ubinos.h"
 task_static_config task_static_info[NUM_OF_TASKS];
 task_dynamic_stat task_dyn_info[NUM_OF_TASKS];
-unsigned char task_state[NUM_OF_TASKS][10];
+unsigned char task_state[NUM_OF_TASKS] = {0};
 unsigned char Ceiling_Prio[2];
 
 

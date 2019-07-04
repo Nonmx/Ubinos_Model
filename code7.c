@@ -48,11 +48,13 @@ L_1_0:
 L_1_1:
 	current_pc[1]++;
 	//int i = 0;
-	while (i < 50)
+	while (i < 41)
 	{
 		i++;
 		//num++;
 		printf("task1 has produced one\n\n");
+		printf("task3 sem_data: %d\n\n", sem[0]
+			.counter);
 		sem_flag[1] = sem_give(sem);
 		if (sem_flag[1])
 			return;
@@ -94,10 +96,13 @@ void TASK(2)
 	jump_2();
 L_2_0:
 	current_pc[2]++;
-	while(j < 25)
+	while(j < 20)
 	{
 		j++;
+		printf("i am task2");
+		printf("task2 sem_data: %d\n\n", sem[0].counter);
 		sem_flag[2] = sem_take(sem);
+		printf("task2 sem_data: %d\n\n", sem[0].counter);
 		if (sem_flag[2])
 			return;
 		//printf("task 2 consumes one\n\n");
@@ -135,11 +140,13 @@ void TASK(3)
 	jump_3();
 L_3_0:
 	current_pc[3]++;
-	while(l<25)
+	while(l<20)
 	{
 		l++;
+		printf("task3 sem_data: %d\n\n", sem[0].counter);
 		sem_flag[3] = sem_take(sem);
-		if (sem_flag[3])
+		printf("task3 sem_data: %d\n\n", sem[0].counter);
+		 if (sem_flag[3])
 			return;
 		//printf("task 3 consumes one\n\n");
 	L_3_1:

@@ -56,7 +56,7 @@
     <ClCompile Include="waitingQ.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code6.c">
+    <ClCompile Include="code7.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

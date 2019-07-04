@@ -14,14 +14,10 @@ static __inline char is_idle()
 {
 	char a = 0;
 	int i;
-	int j;
 	for (i = 0; i < NUM_OF_TASKS; i++)
 	{
-		for (j = 0; j < NUM_OF_TASKS; j++)
-		{
-			if (task_state[i][j] == Running)
-				a++;
-		}
+		if(task_state[i] == Running)
+			a++;
 	}
 	return a > 0 ? 0 : 1;
 }
@@ -30,14 +26,10 @@ static __inline char is_sleeping()
 {
 	char a = 0;
 	int i;
-	int j;
 	for (i = 0; i < NUM_OF_TASKS; i++)
 	{
-		for (j = 0; j < NUM_OF_TASKS; j++)
-		{
-			if (task_state[i][j] == Blocked)
-				a++;
-		}
+		if(task_state[i] == Running)
+			a++;
 	}
 	return a > 0 ? 1 : 0;
 }

@@ -1,5 +1,6 @@
 #include "waitingQ.h"
 #include "ubinos.h"
+#include <stdio.h>
 
 
 WQ waitingQ[NUM_OF_TASKS];
@@ -22,9 +23,9 @@ int full()
 		return 1;
 	else
 		return 0;
-}
+}  
 
-void enQ(unsigned char tid, unsigned char p)
+int enQ(unsigned char tid, unsigned char p)
 {
 	if (full())
 	{
@@ -32,7 +33,8 @@ void enQ(unsigned char tid, unsigned char p)
 	}
 	else 
 	{
-		task_state[tid][act_counter[tid]] = Blocked;
+		task_state[tid] = Blocked;
+		printf("task_state[tid][act_counter[tid]] = %d \n", task_state[tid]);
 		waitingQ[Rear].tid = tid;
 		waitingQ[Rear].prio = p;
 		Rear = (QSIZE + Rear + 1) % QSIZE;

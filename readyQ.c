@@ -45,7 +45,7 @@ void push_task_into_readyQ(unsigned char t, unsigned char p, int pc, push_type p
 
 		if (pushkind == PREEMPT)
 		{ //preemption, 
-			task_state[t][act_counter[t]--] = Ready;
+			task_state[t] = Ready;
 			k = rear[p];
 			readyQ[p][k].tid = t;
 			readyQ[p][k].pc = pc + 1;
@@ -54,7 +54,7 @@ void push_task_into_readyQ(unsigned char t, unsigned char p, int pc, push_type p
 		}
 		else
 		{
-			task_state[t][act_counter[t]] = Ready;
+			task_state[t] = Ready;
 			k = rear[p];
 			readyQ[p][k].tid = t;
 			readyQ[p][k].pc = pc;
@@ -72,7 +72,7 @@ void push_task_into_readyQ(unsigned char t, unsigned char p, int pc, push_type p
 		}
 	}
 }
-
+int s = 0;
 void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 {
 	int i = 0;
@@ -80,6 +80,11 @@ void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 	{
 		printf("Queue is empty\n");
 		current_tid = -1;
+	}
+	else if (is_empty() && is_sleeping())
+	{
+		*t = 0;
+		*p = 0;
 	}
 	else if (!is_empty())
 	{
@@ -102,31 +107,19 @@ void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 		{
 			max_prio--;
 		}
-		task_state[*t][act_counter[*t]] = Running;
+		task_state[*t] = Running;
+		printf("task_state[*t] -> %d\n\n", task_state[*t]);
 		//if (task_state[*t][act_counter[*t]] == Running)
 			//act_counter[*t]++;
 	}
-	else
-	{
-		*t = 0;
-		*p = 0;// tid와 priority 다 0인 가상 task 생성
-		return 0;
-	}
+	
 }
 
 extern signed char current_tid;
 extern unsigned char current_prio;
 
 int reschedule(API api, unsigned char tid) { //work for priority scheduling
-	if (is_idle()) //|| api == API_TerminateTask )//|| api == API_ChainTask || api == API_WaitEvent)
-	{
-		get_task_from_readyQ(&current_tid, &current_prio);
-		if (current_tid == -1)
-			return 0;
-		else
-			return 1;
-	}
-	else if (api == API_TerminateTask || api == API_task_sleep|| api == API_sem_take)
+	if (is_idle() || api == API_TerminateTask || api == API_task_sleep || api == API_sem_take )
 	{
 		get_task_from_readyQ(&current_tid, &current_prio);
 		if (current_tid == -1)

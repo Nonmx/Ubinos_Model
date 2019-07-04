@@ -1,4 +1,4 @@
-
+#include "ubinos.h"
 
 #define QSIZE 15
 
@@ -11,7 +11,7 @@ typedef struct
 //int Front = 0;
 //int Rear = 0;
 
-void enQ(unsigned char, unsigned char);
+int enQ(unsigned char, unsigned char);
 void deQ(unsigned char*, unsigned char*);
 
 int empty();

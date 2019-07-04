@@ -80,7 +80,7 @@ They are actually declared in osek.h
 */
 extern task_static_config task_static_info[NUM_OF_TASKS]; //static configuration of tasks
 extern task_dynamic_stat task_dyn_info[NUM_OF_TASKS]; //dynamic state of tasks
-extern unsigned char task_state[NUM_OF_TASKS][10]; //state of tasks(??)
+extern unsigned char task_state[NUM_OF_TASKS]; //state of tasks(??)
 extern int PC[NUM_OF_TASKS]; //Program Counter
 /* inline functions to get current information of the model. (allocation, event set/clear) */
 

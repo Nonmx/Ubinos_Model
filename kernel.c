@@ -10,15 +10,9 @@ Date: 08/09/2016
 #include "readyQ.h"
 #include "mylib.h"
 #include "waitingQ.h"
-#include <time.h>
-#include <windows.h>
 
 //part of task_sleep
-LARGE_INTEGER sleep_start[NUM_OF_TASKS];
-LARGE_INTEGER sleep_over[NUM_OF_TASKS];
-double running_time[NUM_OF_TASKS];
-unsigned task_list[NUM_OF_TASKS];
-double task_time[NUM_OF_TASKS];
+
 
 extern void eventually(int);
 
@@ -44,7 +38,7 @@ int task_create(unsigned char reftask)
 	}
 	else if (task_dyn_info[reftask].act_cnt < task_static_info[reftask].max_act_cnt)
 	{
-		if (task_state[reftask][act_counter[reftask]] == Suspended)
+		if (task_state[reftask] == Suspended)
 		{
 			int i;
 			//When it is transferred from suspended state, then all events are cleared.
@@ -82,12 +76,12 @@ int TerminateTask()
 		task_dyn_info[current_tid].act_cnt--;
 	if (task_dyn_info[current_tid].act_cnt > 0)
 	{
-		task_state[current_tid][act_counter[current_tid]] = Ready;
+		task_state[current_tid] = Ready;
 		//eventually(current_tid);
 	}
 	else
 	{
-		task_state[current_tid][act_counter[current_tid]] = Suspended;
+		task_state[current_tid] = Suspended;
 	}
 	min_activation_order[current_tid] = cur_activation_order[current_tid] + 1;
 	return reschedule(API_TerminateTask, current_tid);
@@ -106,17 +100,15 @@ unsigned char task_tid;
 int task_sleep(double time)
 {
 
-	if (task_state[current_tid][act_counter[current_tid]] == Running)
+	if (task_state[current_tid] == Running)
 	{
-		task_time[current_tid] = time;
 		api = API_task_sleep;
-		task_state[current_tid][act_counter[current_tid]] = Blocked;
-		task_list[current_tid] = current_tid;
+		task_state[current_tid] = Blocked;
 		return(reschedule(API_task_sleep, current_tid));
 
 		//return current_tid;
 	}
-	else if (task_state[current_tid][act_counter[current_tid]] == Suspended)
+	else if (task_state[current_tid] == Suspended)
 	{
 		return 0; //
 	}
@@ -128,10 +120,10 @@ int task_sleep(double time)
 
 int time_checker(unsigned char tid)//Wake up the task
 {
-	if (task_state[tid][act_counter[tid]] == Blocked)
+	if (task_state[tid] == Blocked)
 	{
 		
-		task_state[tid][act_counter[tid]] = Ready;
+		task_state[tid] = Ready;
 		push_task_into_readyQ(tid, task_static_info[tid].prio, 0, 0);
 		
 
@@ -169,7 +161,7 @@ int mutex_create(mutex_t mutex)
 
 int mutex_lock(mutex_t mutex)
 {
-	if (task_state[current_tid][act_counter[current_tid]] == Running)
+	if (task_state[current_tid] == Running)
 	{
 		mutex[0].flag = 1;//loecked
 		task_dyn_info[current_tid].preemptable = 0;
@@ -182,7 +174,7 @@ int mutex_lock(mutex_t mutex)
 
 int mutex_unlock(mutex_t mutex)
 {
-	if (task_state[current_tid][act_counter[current_tid]] == Running)
+	if (task_state[current_tid] == Running)
 	{
 		mutex[0].flag = 0;
 		task_dyn_info[current_tid].preemptable = 1;
@@ -223,19 +215,13 @@ int sem_give(sem_pt sem)
 {
 	if (!(empty()))
 	{
-		push_task_into_readyQ(current_tid,current_prio,current_pc, PREEMPT);
+		push_task_into_readyQ(current_tid,current_prio,0, PREEMPT);
 		deQ(&current_tid, &current_prio);
 		return 1;
 	}
 	else
 	{
 		sem[0].counter = sem[0].counter + 1;
-		if (reschedule(BIN, current_tid) == 1)
-			return 1;
-		else if (reschedule_2(current_tid) == 1)
-			return 1;
-		else
-			return 0;
 	}
 }
 
