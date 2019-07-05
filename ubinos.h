@@ -54,10 +54,13 @@ typedef struct {
 
 typedef struct {
 	 int flag;//-1 = mutex 없다, 0 = unlocked, 1 = locked
-}mutex_t[1];
+	 unsigned char Lock[NUM_OF_TASKS];//locked인 task 지정
+}mutex_pt[1];
+
 
 typedef struct {
 	int counter;
+	//unsigned char Lock; //locked인 task 지정
 }sem_pt[1];
 
 /*typedef struct{

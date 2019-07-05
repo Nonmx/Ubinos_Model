@@ -108,7 +108,7 @@ void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 			max_prio--;
 		}
 		task_state[*t] = Running;
-		printf("task_state[*t] -> %d\n\n", task_state[*t]);
+		//printf("task_state[*t] -> %d\n\n", task_state[*t]);
 		//if (task_state[*t][act_counter[*t]] == Running)
 			//act_counter[*t]++;
 	}

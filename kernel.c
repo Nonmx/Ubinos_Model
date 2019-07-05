@@ -153,38 +153,57 @@ int time_checker(unsigned char tid)//Wake up the task
 int mu = 0;
 int tex = 0;
 
-int mutex_create(mutex_t mutex)
+int mutex_create(mutex_pt mutex)
 {
-
-	mutex[0].flag = 0;//unlock 상태
+	mutex[0].flag = 0; // mutex 생성
 }
 
-int mutex_lock(mutex_t mutex)
+unsigned char task_list[NUM_OF_TASKS]; 
+
+int mutex_lock(mutex_pt mutex)
 {
-	if (task_state[current_tid] == Running)
+	if (task_state[current_tid] == Running && mutex[0].flag == 0) //The resource is locked
 	{
 		mutex[0].flag = 1;//loecked
 		task_dyn_info[current_tid].preemptable = 0;
+		mutex[0].Lock[current_tid] = 1;//记录当前任务几次被上锁
 		return 1;
 	}
-	else
-		return 0;
-}
-
-
-int mutex_unlock(mutex_t mutex)
-{
-	if (task_state[current_tid] == Running)
+	else if (mutex[0].flag == 1 && mutex[0].Lock[current_tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
 	{
-		mutex[0].flag = 0;
-		task_dyn_info[current_tid].preemptable = 1;
+		mutex[0].flag = 1;
+		task_dyn_info[current_tid].preemptable = 0;
+		mutex[0].Lock[current_tid]++;
 		return 1;
 	}
 	else
 		return 0;
 }
 
-int mutex_islocked(mutex_t mutex)
+
+int mutex_unlock(mutex_pt mutex)
+{
+	if (task_state[current_tid] == Running && mutex[0].flag == 1)
+	{
+		if (mutex[0].Lock[current_tid] > 1)//不止一个task需要unlock
+		{
+			mutex[0].flag = 1;
+			task_dyn_info[current_tid].preemptable = 0;
+			mutex[0].Lock[current_tid]--;
+			return 1;
+		}
+		else
+		{
+			mutex[0].flag = 0;
+			task_dyn_info[current_tid].preemptable = 1;
+			return 1;
+		}
+	}
+	else
+		return 0;
+}
+
+int mutex_islocked(mutex_pt mutex)
 {
 	if (mutex[0].flag == 1)
 		return 1;//locked
@@ -192,10 +211,32 @@ int mutex_islocked(mutex_t mutex)
 		return 0;//unlocked
 }
 
-int mutex_delete(mutex_t mutex)
+int mutex_delete(mutex_pt mutex)
 {
 	mutex[0].flag = -1;
 	return 1;
+}
+
+
+//running에서 호출
+int mutex_lock_timed(mutex_pt mutex,unsigned int time,unsigned char tid) //现在不知道要不要修改 先这样
+{
+	if (task_state[tid] == Running && mutex[0].flag == 0) //The resource is locked
+	{
+		mutex[0].flag = 1;//loecked
+		task_dyn_info[tid].preemptable = 0;
+		mutex[0].Lock[tid] = 1;//记录当前任务几次被上锁
+		return 1;
+	}
+	else if (mutex[0].flag == 1 && mutex[0].Lock[tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
+	{
+		mutex[0].flag = 1;
+		task_dyn_info[tid].preemptable = 0;
+		mutex[0].Lock[tid]++;
+		return 1;
+	}
+	else
+		return 0;
 }
 
 

@@ -28,7 +28,7 @@ static __inline char is_sleeping()
 	int i;
 	for (i = 0; i < NUM_OF_TASKS; i++)
 	{
-		if(task_state[i] == Running)
+		if(task_state[i] == Blocked)
 			a++;
 	}
 	return a > 0 ? 1 : 0;

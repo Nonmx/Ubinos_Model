@@ -9,7 +9,7 @@
 //#include "readyQ.h"
 
 
-mutex_t mutex;
+mutex_pt mutex;
 
 int RR();
 
@@ -54,8 +54,10 @@ void TASK(1) //Adding
 		num++;
 		printf("[add] num: %d \r\n", num);
 		mutex_unlock(mutex);
+		//flag = RR();
 		flag = task_sleep(1000);
-		if (flag!= -1)
+		//printf("task1 -> flag : %d\n\n", flag);
+		if (flag)
 			return;
 	L_1_2:
 		;
@@ -102,8 +104,9 @@ void TASK(2) //Adding
 		num--;
 		printf("[sub] num: %d \r\n", num);
 		mutex_unlock(mutex);
+		//flag = RR();
 		flag = task_sleep(1000);
-		if (flag != -1)
+		if (flag)
 			return;
 	L_2_2:
 		;

@@ -9,6 +9,7 @@ Author : Yang Song
 
 #include "config.h"
 
+
 unsigned char ecode;
 unsigned char error[NUM_OF_TASKS];
 
@@ -29,17 +30,20 @@ int time_checker(unsigned char);
 //void RR(unsigned char); //round robin scheduler
 
 //part of mutex
-int mutex_create(mutex_t);
-int mutex_delete(mutex_t);
-int mutex_lock(mutex_t);
-int mutex_unlock(mutex_t);
-int mutex_islocked(mutex_t);
+
+int mutex_create(mutex_pt);
+int mutex_delete(mutex_pt);
+int mutex_lock(mutex_pt);
+int mutex_unlock(mutex_pt);
+int mutex_islocked(mutex_pt);
+int mutex_lock_timed(mutex_pt, unsigned int,unsigned char);
 
 //part of semaphore
 int sem_create(sem_pt);
 int sem_delete(sem_pt);
 int sem_take(sem_pt);
 int sem_give(sem_pt);
+int sem_take_timed(sem_pt, unsigned int);
 
 
 extern int os_on;
