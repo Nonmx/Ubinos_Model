@@ -36,6 +36,9 @@
     <ClInclude Include="waitingQ.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="messageQ.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="initialize.c">
@@ -56,7 +59,10 @@
     <ClCompile Include="waitingQ.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code6.c">
+    <ClCompile Include="messageQ.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code8.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

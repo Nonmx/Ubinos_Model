@@ -119,7 +119,7 @@ extern signed char current_tid;
 extern unsigned char current_prio;
 
 int reschedule(API api, unsigned char tid) { //work for priority scheduling
-	if (is_idle() || api == API_TerminateTask || api == API_task_sleep || api == API_sem_take )
+	if (is_idle() || api == API_TerminateTask || api == API_task_sleep || api == API_sem_take|| api == API_msgq_receive )
 	{
 		get_task_from_readyQ(&current_tid, &current_prio);
 		if (current_tid == -1)

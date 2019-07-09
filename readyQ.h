@@ -22,7 +22,7 @@ typedef struct queue {
 }Queue;
 
 extern unsigned char idx;
-extern int front[MAX_PRIORITY + 1];
+extern int fron[MAX_PRIORITY + 1];
 extern unsigned char k;
 extern int rear[MAX_PRIORITY + 1];
 extern unsigned char max_prio;

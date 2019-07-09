@@ -10,6 +10,7 @@ Date: 08/09/2016
 #include "readyQ.h"
 #include "mylib.h"
 #include "waitingQ.h"
+#include "messageQ.h"
 
 //part of task_sleep
 
@@ -150,8 +151,6 @@ int time_checker(unsigned char tid)//Wake up the task
 	}
 }
 
-int mu = 0;
-int tex = 0;
 
 int mutex_create(mutex_pt mutex)
 {
@@ -166,14 +165,14 @@ int mutex_lock(mutex_pt mutex)
 	{
 		mutex[0].flag = 1;//loecked
 		task_dyn_info[current_tid].preemptable = 0;
-		mutex[0].Lock[current_tid] = 1;//记录当前任务几次被上锁
+		mutex[0].owner[current_tid] = 1;//记录当前任务几次被上锁
 		return 1;
 	}
-	else if (mutex[0].flag == 1 && mutex[0].Lock[current_tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
+	else if (mutex[0].flag == 1 && mutex[0].owner[current_tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
 	{
 		mutex[0].flag = 1;
 		task_dyn_info[current_tid].preemptable = 0;
-		mutex[0].Lock[current_tid]++;
+		mutex[0].owner[current_tid]++;
 		return 1;
 	}
 	else
@@ -185,11 +184,11 @@ int mutex_unlock(mutex_pt mutex)
 {
 	if (task_state[current_tid] == Running && mutex[0].flag == 1)
 	{
-		if (mutex[0].Lock[current_tid] > 1)//不止一个task需要unlock
+		if (mutex[0].owner[current_tid] > 1)//不止一个task需要unlock
 		{
 			mutex[0].flag = 1;
 			task_dyn_info[current_tid].preemptable = 0;
-			mutex[0].Lock[current_tid]--;
+			mutex[0].owner[current_tid]--;
 			return 1;
 		}
 		else
@@ -225,14 +224,14 @@ int mutex_lock_timed(mutex_pt mutex,unsigned int time,unsigned char tid) //现�
 	{
 		mutex[0].flag = 1;//loecked
 		task_dyn_info[tid].preemptable = 0;
-		mutex[0].Lock[tid] = 1;//记录当前任务几次被上锁
+		mutex[0].owner[tid] = 1;//记录当前任务几次被上锁
 		return 1;
 	}
-	else if (mutex[0].flag == 1 && mutex[0].Lock[tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
+	else if (mutex[0].flag == 1 && mutex[0].owner[tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
 	{
 		mutex[0].flag = 1;
 		task_dyn_info[tid].preemptable = 0;
-		mutex[0].Lock[tid]++;
+		mutex[0].owner[tid]++;
 		return 1;
 	}
 	else
@@ -282,8 +281,56 @@ int sem_take(sem_pt sem)
 	}
 }
 
+int sem_take_timed(sem_pt sem, unsigned int timed) //和普通的sem_take 没啥区别
+{
+	if (sem[0].counter > 0)
+	{
+		sem[0].counter = sem[0].counter - 1;
+		return 1;
+	}
+	else
+	{
+		enQ(current_tid, current_prio);
+		return (reschedule(API_sem_take, current_tid));
+	}
+}
 
 
+//message Q
+int msgq_create(msgq_pt msgq_p, unsigned int msgsize, unsigned int maxcount) //for noting
+{
+	return 1;
+}
+
+int msgq_send(msgq_pt msgq_p , unsigned char* message) 
+{
+	if (!(MQ_empty()))
+	{
+		push_task_into_readyQ(current_tid, current_prio, 0, PREEMPT);
+		deQ(&current_tid, &current_prio);
+		return 1;
+	}
+	else
+	{
+		push_message_into_MQ(message);
+		return 1;
+
+	}
+}
+
+int msgq_receive(msgq_pt msgq_p, unsigned char* message)
+{
+	if (MQ_empty() == 1)
+	{
+		get_message_from_MQ(message);
+		return 0;
+	}
+	else
+	{
+		enQ(current_tid, current_prio);
+		return(reschedule(API_msgq_receive, current_tid));
+	}
+}
 
 int os_on;
 const int ON = 1;

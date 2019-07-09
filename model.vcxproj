@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClInclude Include="config.h" />
     <ClInclude Include="kernel.h" />
+    <ClInclude Include="messageQ.h" />
     <ClInclude Include="mylib.h" />
     <ClInclude Include="os.h" />
     <ClInclude Include="readyQ.h" />
@@ -132,10 +133,11 @@
     <ClInclude Include="waitingQ.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code6.c" />
+    <ClCompile Include="code8.c" />
     <ClCompile Include="initialize.c" />
     <ClCompile Include="kernel.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="messageQ.c" />
     <ClCompile Include="model.c" />
     <ClCompile Include="readyQ.c" />
     <ClCompile Include="waitingQ.c" />
