@@ -1,16 +1,16 @@
 #include "ubinos.h"
 
-#define messgaeQ_SIZE 15
+#define messageQ_SIZE 15
 
 typedef struct
 {
-	unsigned char messgae[messgaeQ_SIZE];
+	unsigned char messgae[messageQ_SIZE];
 }MQ;
 
 //int Front = 0;
 //int Rear = 0;
 
-MQ Messahe_Queue[messgaeQ_SIZE];
+MQ Message_Queue[messageQ_SIZE];
 
 int push_message_into_MQ(unsigned char*);
 int get_message_from_MQ(unsigned char*);

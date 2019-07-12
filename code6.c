@@ -32,6 +32,10 @@ int j = 0;
 			goto L_1_2;break;\
 		case 3:\
 			goto L_1_3;break;\
+		case 4:\
+			goto L_1_4;break;\
+		case 5:\
+			goto L_1_5;break;\
 	}\
 }
 
@@ -39,30 +43,43 @@ int num = 0;
 void TASK(1) //Adding
 {
 	jump_1();
-	L_1_0:
-
-	current_pc[1]++;
+L_1_0:
+	current_pc[1] = 1;
 	flag = RR();
 	if (flag)
 		return;
 	L_1_1:
-	current_pc[1]++;
 	while (i < 20)
 	{
-		mutex_lock(mutex);
 		i++;
-		num++;
-		printf("[add] num: %d \r\n", num);
-		mutex_unlock(mutex);
-		//flag = RR();
-		flag = task_sleep(1000);
-		//printf("task1 -> flag : %d\n\n", flag);
+		current_pc[1] = 2;
+		flag = mutex_lock(mutex);
 		if (flag)
 			return;
 	L_1_2:
+		flag = RR();
+		current_pc[1] = 3;
+		if (flag)
+			return;
+	L_1_3:
+		num++;
+		printf("[add] num: %d \r\n", num);
+		flag = mutex_unlock(mutex);
+		current_pc[1] = 4;
+		if (flag)
+			return;
+	L_1_4:
+		//flag = RR();
+		printf("task1 going to sleeping \n\n");
+		flag = task_sleep(1000);
+		current_pc[1] = 5;
+		//printf("task1 -> flag : %d\n\n", flag);
+		if (flag)
+			return;
+	L_1_5:
 		;
 	}
-L_1_3:
+
 	current_pc[1] = 0;
 	flag = TerminateTask();
 	if (flag)
@@ -83,6 +100,10 @@ L_1_3:
 			goto L_2_2;break;\
 		case 3:\
 			goto L_2_3;break;\
+		case 4:\
+			goto L_2_4;break;\
+		case 5:\
+			goto L_2_5;break;\
 	}\
 }
 
@@ -91,27 +112,40 @@ void TASK(2) //Adding
 	jump_2();
 	L_2_0:
 
-	current_pc[2]++;
+	current_pc[2] = 1;
 	flag = RR();
 	if (flag)
 		return;
 	L_2_1:
-	current_pc[2]++;
-	while (i < 20)
+	while (j < 20)
 	{
-		mutex_lock(mutex);
-		i++;
-		num--;
-		printf("[sub] num: %d \r\n", num);
-		mutex_unlock(mutex);
-		//flag = RR();
-		flag = task_sleep(1000);
+		j++;
+		flag  = mutex_lock(mutex);
+		current_pc[2] = 2;
 		if (flag)
 			return;
 	L_2_2:
+		flag = RR();
+		current_pc[2] = 3;
+		if (flag)
+			return;
+	L_2_3:
+		num--;
+		printf("[sub] num: %d \r\n", num);
+		flag = mutex_unlock(mutex);
+		current_pc[2] = 4;
+		if (flag)
+			return;
+	L_2_4:
+		//flag = RR();
+		printf("task2 going to sleeping\n\n");
+		flag = task_sleep(1000);
+		current_pc[2] = 5;
+		if (flag)
+			return;
+	L_2_5:
 		;
 	}
-	L_2_3:
 	current_pc[2] = 0;
 	flag = TerminateTask();
 	if (flag)
@@ -140,8 +174,11 @@ void running()
 {
 	while (current_tid >= 0)
 	{
+
+		
 		time++;
-		if (time < 3)
+		//printf("the %d time, task_state[1] = %d \n\n", time, task_state[1]);
+		if (time < 9)
 		{
 			A:
 			if (current_tid == 1)
@@ -149,13 +186,13 @@ void running()
 			else if (current_tid == 2)
 				TASK(2);
 		}
-		else if (time == 3)
+		else if (time == 9)
 		{
-			time_checker(1);
+			if(time_checker(1))
 			//time = 2;
-			goto A;
+				goto A;
 		}
-		else if (time == 4)
+		else if (time == 10)
 		{
 			time_checker(2);
 			time = 0;

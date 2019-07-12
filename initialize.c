@@ -37,7 +37,4 @@ void initialize() {
 	task_dyn_info[4].dyn_prio = task_static_info[4].prio;
 	task_dyn_info[4].act_cnt = 0;
 
-	task_dyn_info[1].preemptable = 1;
-	task_dyn_info[2].preemptable = 1;
-	task_dyn_info[3].preemptable= 1;
 }

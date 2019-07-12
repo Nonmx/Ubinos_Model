@@ -16,7 +16,7 @@ int MQ_empty()
 
 int MQ_full()
 {
-	if ((R + 1) % (messgaeQ_SIZE + 1) == F)
+	if ((R + 1) % (messageQ_SIZE + 1) == F)
 		return 1;
 	else
 		return 0;
@@ -32,11 +32,11 @@ int push_message_into_MQ(unsigned char *message)
 	else
 	{
 		//*Messahe_Queue->messgae = message;
-		for (int i = 0; i < messgaeQ_SIZE; i++)
+		for (int i = 0; i < messageQ_SIZE; i++)
 		{
-			Messahe_Queue[R].messgae[i] = message[i];
+			Message_Queue[R].messgae[i] = message[i];
 		}
-		R = (messgaeQ_SIZE + R + 1) % messgaeQ_SIZE;
+		R = (messageQ_SIZE + R + 1) % messageQ_SIZE;
 
 		return 1;
 	}
@@ -51,11 +51,11 @@ int get_message_from_MQ(unsigned char* message)
 	}
 	else
 	{
-		for (int i = 0; i < messgaeQ_SIZE; i++)
+		for (int i = 0; i < messageQ_SIZE; i++)
 		{
-			message[i] = Messahe_Queue[F].messgae[i];
+			message[i] = Message_Queue[F].messgae[i];
 		}
-		F = (F + 1) % messgaeQ_SIZE;
+		F = (F + 1) % messageQ_SIZE;
 		return 1;
 	}
 }

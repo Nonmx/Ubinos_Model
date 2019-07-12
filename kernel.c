@@ -105,6 +105,7 @@ int task_sleep(double time)
 	{
 		api = API_task_sleep;
 		task_state[current_tid] = Blocked;
+		//printf("task_state[%d] = %d", current_tid, task_state[current_tid]);
 		return(reschedule(API_task_sleep, current_tid));
 
 		//return current_tid;
@@ -161,45 +162,64 @@ unsigned char task_list[NUM_OF_TASKS];
 
 int mutex_lock(mutex_pt mutex)
 {
-	if (task_state[current_tid] == Running && mutex[0].flag == 0) //The resource is locked
-	{
-		mutex[0].flag = 1;//loecked
-		task_dyn_info[current_tid].preemptable = 0;
-		mutex[0].owner[current_tid] = 1;//记录当前任务几次被上锁
-		return 1;
-	}
-	else if (mutex[0].flag == 1 && mutex[0].owner[current_tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
+	mutex[0].lock_call[current_tid] = 1;
+	if (mutex[0].flag == 0 && mutex[0].owner[current_tid] == 0)//first time 
 	{
 		mutex[0].flag = 1;
-		task_dyn_info[current_tid].preemptable = 0;
-		mutex[0].owner[current_tid]++;
-		return 1;
+		mutex[0].owner[current_tid] = 1;
+		mutex[0].lock_counter = 1;
+		//mutex[0].call[current_tid]++;
+
+		return 0;
+	}
+	else if (mutex[0].lock_counter >= 1 && mutex[0].owner[current_tid] == 1)// mutex 여려번 잠금할 수 있다.
+	{
+		mutex[0].flag = 1;
+		mutex[0].owner[current_tid] = 1;
+		mutex[0].lock_counter++;
+		return 0;
 	}
 	else
-		return 0;
+	{
+		task_state[current_tid] = Blocked;
+		enQ(current_tid,current_prio);
+		reschedule(current_tid, current_prio);
+		return 1;
+	}
 }
 
 
 int mutex_unlock(mutex_pt mutex)
 {
-	if (task_state[current_tid] == Running && mutex[0].flag == 1)
+	if (mutex[0].flag == 1 && mutex[0].owner[current_tid] == 1 && mutex[0].lock_counter == 1 && mutex[0].lock_call[current_tid] > 0)
 	{
-		if (mutex[0].owner[current_tid] > 1)//不止一个task需要unlock
-		{
+		mutex[0].flag = 0;
+		mutex[0].owner[current_tid] = 0;
+		mutex[0].lock_counter = 0;
+		mutex[0].lock_call[current_tid] = 0;
+		get_task_from_WQ(TID, PRI); // block중인 tid 흭득
+		if (is_sleeping() && mutex[0].lock_call[TID[0]] > 0) // 지금 sleeping아닌 waitQ에서(block) task가 있으면 그리고 해당task 이미 mutex_lock 호출하면 
+		{	
+			//block된 task 수행될 때 mutex 가지고 있는 상태로 resume
+			task_state[TID[0]] = Blocked;
 			mutex[0].flag = 1;
-			task_dyn_info[current_tid].preemptable = 0;
-			mutex[0].owner[current_tid]--;
+			mutex[0].owner[TID[0]] = 1;
+			mutex[0].lock_counter = 1;
+			push_task_into_readyQ(TID[0], PRI[0], 0, PREEMPT);//readyQ로 추가해서 바로 실행하지 않는다.
 			return 1;
 		}
-		else
-		{
-			mutex[0].flag = 0;
-			task_dyn_info[current_tid].preemptable = 1;
-			return 1;
-		}
+		return 0;
+	}
+	else if (mutex[0].owner[current_tid] == 1 && mutex[0].lock_counter > 1)
+	{
+		mutex[0].flag = 1;
+		mutex[0].owner[current_tid] = 1;
+		mutex[0].lock_counter--;
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 int mutex_islocked(mutex_pt mutex)
@@ -217,26 +237,33 @@ int mutex_delete(mutex_pt mutex)
 }
 
 
-//running에서 호출
-int mutex_lock_timed(mutex_pt mutex,unsigned int time,unsigned char tid) //现在不知道要不要修改 先这样
+
+
+/*int mutex_time_checker(mutex_pt mutex)
 {
-	if (task_state[tid] == Running && mutex[0].flag == 0) //The resource is locked
+	if (mutex[0].flag == 0 && mutex[0].owner[current_tid] == 0) //first time 잠금
 	{
-		mutex[0].flag = 1;//loecked
-		task_dyn_info[tid].preemptable = 0;
-		mutex[0].owner[tid] = 1;//记录当前任务几次被上锁
-		return 1;
+		mutex[0].flag == 1;
+		mutex[0].owner[current_tid] = 1;
+		mutex[0].lock_counter = 1;
 	}
-	else if (mutex[0].flag == 1 && mutex[0].owner[tid] > 0) //第二次上锁的时候使用，如果当前该资源和任务已经被上锁可以再次被上锁
+	else if (mutex[0].lock_counter >= 1 && mutex[0].owner[current_tid] == 1)
 	{
-		mutex[0].flag = 1;
-		task_dyn_info[tid].preemptable = 0;
-		mutex[0].owner[tid]++;
-		return 1;
+		mutex[0].lock_counter++;
 	}
 	else
+	{
 		return 0;
+	}
 }
+
+int mutex_lock_timed(mutex_pt mutex,unsigned int time) 
+{
+	mutex[0].call = 1;
+
+}*/
+
+
 
 
 int sem_create(sem_pt sem)

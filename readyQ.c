@@ -127,8 +127,6 @@ int reschedule(API api, unsigned char tid) { //work for priority scheduling
 		else
 			return 1;
 	}
-	else if ((!task_dyn_info[tid].preemptable))
-		return 0;
 	else
 	{
 		if (task_dyn_info[tid].dyn_prio < max_prio)
@@ -147,8 +145,7 @@ int reschedule(API api, unsigned char tid) { //work for priority scheduling
 }
 
 int reschedule_2(unsigned char tid) {//working for round robin scheduling
-	if (task_dyn_info[tid].preemptable !=0)
-	{
+	
 		if (task_dyn_info[tid].dyn_prio == max_prio || task_dyn_info[tid].dyn_prio == P)
 		{
 			push_task_into_readyQ(tid, task_dyn_info[tid].dyn_prio, current_pc[tid], PREEMPT);
@@ -158,7 +155,7 @@ int reschedule_2(unsigned char tid) {//working for round robin scheduling
 			else
 				return 1;
 		}
-	}
+	
 	else
 		return 0;
 }

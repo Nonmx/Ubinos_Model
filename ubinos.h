@@ -55,6 +55,8 @@ typedef struct {
 typedef struct {
 	 int flag;//-1 = mutex 없다, 0 = unlocked, 1 = locked
 	 unsigned char owner[NUM_OF_TASKS];//locked인 task 지정
+	 unsigned int lock_counter;
+	 unsigned int lock_call[NUM_OF_TASKS];
 }mutex_pt[1];
 
 

@@ -62,7 +62,7 @@
     <ClCompile Include="messageQ.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code8.c">
+    <ClCompile Include="code6.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
