@@ -176,7 +176,7 @@ void running()
 		}
 		else if (sleep_checker == 10)
 		{
-			if(time_checker(1))
+			if (time_checker(1))
 				goto sleep_time;
 		}
 		else if (mutex_checker == 11)

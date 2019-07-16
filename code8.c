@@ -1,6 +1,6 @@
 #define TASK(t) TASK_##t()
 /*
-	semphore test
+	message API test
 */
 
 #include "os.h"
@@ -31,26 +31,34 @@ int l = 0;
 			goto L_1_2;break;\
 		case 3:\
 			goto L_1_3;break;\
+		case 4:\
+			goto L_1_4;break;\
+		case 5:\
+			goto L_1_5;break;\
 	}\
 }
 
 int num = 0;
+unsigned char buf[25] = "i love you!\n\n";
 void TASK(1) //Adding
 {
-	unsigned char buf[15];
-
 	jump_1();
 L_1_0:
 
-	current_pc[1]++;
+	current_pc[1] = 1;
 	flag = RR();
 	if (flag)
 		return;
 L_1_1:
-	current_pc[1]++;
+	
 	//int i = 0;
+	current_pc[1] = 2;
 	while (i < 41)
 	{
+		jump_1();
+	L_1_2:
+
+		current_pc[1] = 3;
 		i++;
 		//num++;
 		printf("task1 has produced one\n\n");
@@ -60,14 +68,21 @@ L_1_1:
 		if (mess_flag[1])
 			return;
 
-	L_1_2:
-		;
+	L_1_3:
+
+		current_pc[1] = 4;
+		flag = RR();
+		if (flag)
+			return;
+
+	L_1_4:
+		current_pc[1] = 2;
 	}
-	current_pc[1]++;
+	current_pc[1] = 5;
 	flag = RR();
 	if (flag)
 		return;
-L_1_3:
+L_1_5:
 	current_pc[1] = 0;
 	printf("task1 going to Terminate\n\n");
 	flag = TerminateTask();
@@ -97,7 +112,7 @@ void TASK(2)
 	unsigned char buf[15];
 	jump_2();
 L_2_0:
-	current_pc[2]++;
+	current_pc[2] = 1;
 	while (j < 20)
 	{
 		j++;
@@ -142,7 +157,7 @@ void TASK(3)
 	unsigned char buf[15];
 	jump_3();
 L_3_0:
-	current_pc[3]++;
+	current_pc[3] = 1;
 	while (l < 20)
 	{
 		l++;

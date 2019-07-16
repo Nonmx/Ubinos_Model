@@ -187,7 +187,7 @@ int mutex_lock(mutex_pt mutex)
 			Before_temp = task_static_info[mutex[0].owner[0]].prio; // unlock
 
 			task_state[current_tid] = Blocked;
-			enQ(current_tid, current_prio); // 수행중인 task가 lock 될 수 없으면 waitQ로 push 한다
+			push_task_into_WQ(current_tid, current_prio); // 수행중인 task가 lock 될 수 없으면 waitQ로 push 한다
 			task_dyn_info[mutex[0].owner[0]].dyn_prio = After_temp;
 			return reschedule(API_mutex_lock, current_tid);
 
@@ -196,7 +196,7 @@ int mutex_lock(mutex_pt mutex)
 		else
 		{
 			task_state[current_tid] = Blocked;
-			enQ(current_tid, current_prio);
+			push_task_into_WQ(current_tid, current_prio);
 			reschedule(BIN, current_prio);
 			return 1;
 		}
@@ -266,19 +266,19 @@ int mutex_delete(mutex_pt mutex)
 int mutex_time_checker(mutex_pt mutex,unsigned char tid)
 {
 	
-		if (mutex[0].lock_call == 3 && mutex[0].flag == 0 && mutex[0].owner[0] == 0)
+		if (mutex[0].lock_call[tid] == 3 && mutex[0].flag == 0 && mutex[0].owner[0] == 0)
 		{
 			mutex[0].flag = 1;
 			mutex[0].owner[0] = tid;
 			mutex[0].lock_counter = 1;
 			return 1;
 		}
-		else if (mutex[0].lock_call == 3 && mutex[0].flag >= 1 && mutex[0].owner[0] == tid)
+		else if (mutex[0].lock_call[tid] == 3 && mutex[0].flag >= 1 && mutex[0].owner[0] == tid)
 		{
 			mutex[0].lock_counter++;
 			return 1;
 		}
-		else if (mutex[0].lock_call != 3 && mutex[0].owner[0] == 0)
+		else if (mutex[0].lock_call[tid] != 3 && mutex[0].owner[0] == 0)
 		{
 			get_task_from_WQ(TID, PRI);
 			push_task_into_readyQ(TID[0], PRI[0], 0, PREEMPT);
@@ -291,7 +291,7 @@ int mutex_time_checker(mutex_pt mutex,unsigned char tid)
 int mutex_lock_timed(mutex_pt mutex,unsigned int time) 
 {
 	mutex[0].lock_call[current_tid] = 3;
-	if (mutex[0].flag == 0 && mutex[0].owner[0] == 0)//first time 
+	/*if (mutex[0].flag == 0 && mutex[0].owner[0] == 0)//first time 
 	{
 		mutex[0].flag = 1;
 		mutex[0].owner[0] = current_tid;
@@ -307,10 +307,10 @@ int mutex_lock_timed(mutex_pt mutex,unsigned int time)
 	{
 		task_state[current_tid] = Blocked;
 
-		enQ(current_tid, current_prio);
+		push_task_into_WQ(current_tid, current_prio);
 		reschedule(BIN, current_prio);
 		return 1;
-	}
+	}*/
 }
 
 
@@ -332,8 +332,8 @@ int sem_give(sem_pt sem)
 {
 	if (!(empty()))
 	{
-		push_task_into_readyQ(current_tid,current_prio,0, PREEMPT);
-		deQ(&current_tid, &current_prio);
+		get_task_from_WQ(&current_tid, &current_prio);
+		push_task_into_readyQ(TID[0], PRI[0], current_pc[TID[0]], PREEMPT);
 		return 1;
 	}
 	else
@@ -353,22 +353,30 @@ int sem_take(sem_pt sem)
 	}
 	else
 	{
-		enQ(current_tid, current_prio);
-		return (reschedule(API_sem_take, current_tid));
+		push_task_into_WQ(current_tid, current_prio);
+		return(reschedule(API_msgq_receive, current_tid));
 	}
 }
 
-int sem_take_timed(sem_pt sem, unsigned int timed) //和普通的sem_take 没啥区别
+int sem_take_timed(sem_pt sem, unsigned int timed) 
 {
-	if (sem[0].counter > 0)
+	sem[0].lock_call[current_tid] = 3; // 어느 태스크가 sem_task_time API 호출하는지 기록
+}
+
+int sem_time_checker(sem_pt sem, unsigned char tid)
+{
+	if (sem[0].lock_call[tid] == 3)
 	{
-		sem[0].counter = sem[0].counter - 1;
-		return 1;
-	}
-	else
-	{
-		enQ(current_tid, current_prio);
-		return (reschedule(API_sem_take, current_tid));
+		if (sem[0].counter > 0)
+		{
+			sem[0].counter = sem[0].counter - 1;
+			return 1;
+		}
+		else
+		{
+			push_task_into_WQ(current_tid, current_prio);
+			return (reschedule(API_sem_take, current_tid));
+		}
 	}
 }
 
@@ -379,12 +387,14 @@ int msgq_create(msgq_pt msgq_p, unsigned int msgsize, unsigned int maxcount) //f
 	return 1;
 }
 
+
+
 int msgq_send(msgq_pt msgq_p , unsigned char* message) 
 {
-	if (!(MQ_empty()))
+	if (!(empty()))
 	{
-		push_task_into_readyQ(current_tid, current_prio, 0, PREEMPT);
-		deQ(&current_tid, &current_prio);
+		get_task_from_WQ(&current_tid, &current_prio);
+		push_task_into_readyQ(TID[0], PRI[0], current_pc[TID[0]], PREEMPT);
 		return 1;
 	}
 	else
@@ -397,14 +407,14 @@ int msgq_send(msgq_pt msgq_p , unsigned char* message)
 
 int msgq_receive(msgq_pt msgq_p, unsigned char* message)
 {
-	if (MQ_empty() == 1)
+	if (!(MQ_empty ()))
 	{
 		get_message_from_MQ(message);
 		return 0;
 	}
 	else
 	{
-		enQ(current_tid, current_prio);
+		push_task_into_WQ(current_tid, current_prio);
 		return(reschedule(API_msgq_receive, current_tid));
 	}
 }

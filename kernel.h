@@ -57,4 +57,6 @@ extern const int ON;
 extern const int OFF;
 void ubik_comp_start();
 void ShutDownOS();
+void running();
+void initialize();
 //mapping from kernel.h

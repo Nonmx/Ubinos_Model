@@ -133,7 +133,7 @@
     <ClInclude Include="waitingQ.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code6.c" />
+    <ClCompile Include="code8.c" />
     <ClCompile Include="initialize.c" />
     <ClCompile Include="kernel.c" />
     <ClCompile Include="main.c" />

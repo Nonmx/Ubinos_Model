@@ -1,6 +1,6 @@
 #include "ubinos.h"
 
-#define messageQ_SIZE 15
+#define messageQ_SIZE 25
 
 typedef struct
 {

@@ -15,8 +15,7 @@ unsigned char TID[1];
 unsigned char PRI[1];
 
 
-int enQ(unsigned char, unsigned char);
-int deQ(unsigned char*, unsigned char*);
+int push_task_into_WQ(unsigned char, unsigned char);
 int get_task_from_WQ(unsigned char*, unsigned char*);
 
 int empty();

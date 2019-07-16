@@ -25,7 +25,7 @@ int full()
 		return 0;
 }  
 
-int enQ(unsigned char tid, unsigned char p)
+int push_task_into_WQ(unsigned char tid, unsigned char p)
 {
 	if (full())
 	{
@@ -46,35 +46,9 @@ int enQ(unsigned char tid, unsigned char p)
 
 }
 
-int deQ(unsigned char *tid, unsigned char *prio)
-{
-	if (empty())
-	{
-		printf("waitingQ is empty\n");
-		//current_tid = -1;
-		current_tid = 0;
-		current_prio = 0;
-		P = 0;
-		return 0;
-	}
-	else {
-		*tid = waitingQ[Front].tid;
-		*prio = waitingQ[Front].prio;
-
-		waitingQ[Front].tid = -1;
-		waitingQ[Front].prio = -1;
-
-		Front = (Front + 1) % QSIZE;
-		P = *prio;
-
-		return 1;
-
-	}
-
-}
 
 
-int get_task_from_WQ(unsigned char* tid, unsigned char* prio) //not running
+int get_task_from_WQ(unsigned char* tidT, unsigned char* prio) //not running
 {
 	if (empty())
 	{

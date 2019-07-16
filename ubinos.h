@@ -37,6 +37,31 @@ typedef enum API {
 }API;
 extern API api;
 
+typedef enum Mess{
+	PB_KEY_CHANGE_EVT,
+	PB_BATT_EVT,
+	PB_TIME_EVT,
+	PB_BLE_EVT,
+	PB_AFE_EVT,
+	PB_POPUP_EVT,
+	PB_ALARM_EVT,
+	PB_PNIP_EVT,
+	PB_ACTIVITY_EVT,
+	PB_GLUCOSE_EVT,
+	PB_PAAR_TAG_EVT,
+	PB_PEDOMETER_EVT,
+	PB_SMART_CART_TALK_EVT,
+	PB_TEST_MSG_EVT,
+	PB_QC_EVT,
+	PB_BLE_CONTROL_EVT,
+	PB_SMART_CAR_TALK_EVT,
+	PB_LF_EVT,
+	PB_UI_REFRESH_EVT,
+	PB_WDT_REFRESH_EVT
+}Mess;
+
+Mess MESS;
+
 /* Data structure that store initial configurations */
 typedef struct
 {
@@ -56,13 +81,14 @@ typedef struct {
 	 int flag;//-1 = mutex 없다, 0 = unlocked, 1 = locked
 	 unsigned char owner[1];//locked인 task 지정
 	 unsigned int lock_counter;
-	 unsigned int lock_call[NUM_OF_TASKS];
+     int lock_call[NUM_OF_TASKS];
 	 unsigned int tra_flag;
 }mutex_pt[1];
 
 
 typedef struct {
 	int counter;
+	unsigned int lock_call[NUM_OF_TASKS];
 	//unsigned char Lock; //locked인 task 지정
 }sem_pt[1];
 
