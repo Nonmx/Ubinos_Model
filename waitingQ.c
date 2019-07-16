@@ -48,7 +48,7 @@ int push_task_into_WQ(unsigned char tid, unsigned char p)
 
 
 
-int get_task_from_WQ(unsigned char* tidT, unsigned char* prio) //not running
+int get_task_from_WQ() //not running
 {
 	if (empty())
 	{
