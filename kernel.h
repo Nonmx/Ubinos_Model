@@ -37,7 +37,7 @@ int mutex_lock(mutex_pt);
 int mutex_unlock(mutex_pt);
 int mutex_islocked(mutex_pt);
 int mutex_lock_timed(mutex_pt, unsigned int);
-int mutex_time_checker();
+int mutex_time_checker(mutex_pt, unsigned char);
 
 //part of semaphore
 int sem_create(sem_pt);

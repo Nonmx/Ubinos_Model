@@ -33,7 +33,7 @@ typedef enum state {
 }State;
 
 typedef enum API {
-	API_task_create, API_task_suspend, API_TerminateTask, API_task_resume, API_task_sleep,API_sem_take,API_msgq_receive,BIN
+	API_task_create, API_task_suspend, API_TerminateTask, API_task_resume, API_task_sleep,API_sem_take,API_msgq_receive,API_mutex_lock,BIN
 }API;
 extern API api;
 
@@ -54,9 +54,10 @@ typedef struct {
 
 typedef struct {
 	 int flag;//-1 = mutex 없다, 0 = unlocked, 1 = locked
-	 unsigned char owner[NUM_OF_TASKS];//locked인 task 지정
+	 unsigned char owner[1];//locked인 task 지정
 	 unsigned int lock_counter;
 	 unsigned int lock_call[NUM_OF_TASKS];
+	 unsigned int tra_flag;
 }mutex_pt[1];
 
 

@@ -10,7 +10,7 @@
 #define MIN_EVENT_ID 0
 #define MAX_EVENT_ID 0
 #define NUM_OF_ALARMS 3
-#define MAX_PRIORITY 2
+#define MAX_PRIORITY 5
 
 #define Task1 1
 #define Task2 2

@@ -34,7 +34,7 @@ int enQ(unsigned char tid, unsigned char p)
 	}
 	else 
 	{
-		printf("enQ -> rear: %d\n\n", Rear);
+		//printf("enQ -> rear: %d\n\n", Rear);
 		task_state[tid] = Blocked;
 		//printf("task_state[tid][act_counter[tid]] = %d \n", task_state[tid]);
 		waitingQ[Rear].tid = tid;

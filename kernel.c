@@ -158,63 +158,87 @@ int mutex_create(mutex_pt mutex)
 	mutex[0].flag = 0; // mutex 생성
 }
 
-unsigned char task_list[NUM_OF_TASKS]; 
+unsigned char Before_temp;
+unsigned char After_temp;
 
 int mutex_lock(mutex_pt mutex)
 {
 	mutex[0].lock_call[current_tid] = 1;
-	if (mutex[0].flag == 0 && mutex[0].owner[current_tid] == 0)//first time 
+	if (mutex[0].flag == 0 && mutex[0].owner[0]== 0)//first time 
 	{
 		mutex[0].flag = 1;
-		mutex[0].owner[current_tid] = 1;
+		mutex[0].owner[0]= current_tid;
 		mutex[0].lock_counter = 1;
 		//mutex[0].call[current_tid]++;
 
-		return 0;
+		return 1;
 	}
-	else if (mutex[0].lock_counter >= 1 && mutex[0].owner[current_tid] == 1)// mutex 여려번 잠금할 수 있다.
+	else if (mutex[0].lock_counter >= 1 && mutex[0].owner[0]== current_tid)// mutex 여려번 잠금할 수 있다.
 	{
-		mutex[0].flag = 1;
-		mutex[0].owner[current_tid] = 1;
 		mutex[0].lock_counter++;
-		return 0;
+		return 1;
 	}
 	else
 	{
-		task_state[current_tid] = Blocked;
-		enQ(current_tid,current_prio);
-		reschedule(current_tid, current_prio);
-		return 1;
+		if (task_static_info[mutex[0].owner[0]].prio < task_static_info[current_tid].prio)
+		{
+			mutex[0].tra_flag++;
+			After_temp = current_prio;
+			Before_temp = task_static_info[mutex[0].owner[0]].prio; // unlock
+
+			task_state[current_tid] = Blocked;
+			enQ(current_tid, current_prio); // 수행중인 task가 lock 될 수 없으면 waitQ로 push 한다
+			task_dyn_info[mutex[0].owner[0]].dyn_prio = After_temp;
+			return reschedule(API_mutex_lock, current_tid);
+
+
+		}
+		else
+		{
+			task_state[current_tid] = Blocked;
+			enQ(current_tid, current_prio);
+			reschedule(BIN, current_prio);
+			return 1;
+		}
 	}
 }
 
 
 int mutex_unlock(mutex_pt mutex)
 {
-	if (mutex[0].flag == 1 && mutex[0].owner[current_tid] == 1 && mutex[0].lock_counter == 1 && mutex[0].lock_call[current_tid] > 0)
+	if (mutex[0].flag == 1  && mutex[0].lock_counter == 1 && mutex[0].lock_call[current_tid] > 0)
 	{
+		if (mutex[0].tra_flag > 0) // priority 북구
+		{
+			mutex[0].tra_flag--;
+			task_dyn_info[mutex[0].owner[0]].dyn_prio = task_static_info[mutex[0].owner[0]].prio;
+
+		}
 		mutex[0].flag = 0;
-		mutex[0].owner[current_tid] = 0;
+		mutex[0].owner[0] = 0;
 		mutex[0].lock_counter = 0;
 		mutex[0].lock_call[current_tid] = 0;
 		get_task_from_WQ(TID, PRI); // block중인 tid 흭득
 		if (is_sleeping() && mutex[0].lock_call[TID[0]] > 0) // 지금 sleeping아닌 waitQ에서(block) task가 있으면 그리고 해당task 이미 mutex_lock 호출하면 
 		{	
 			//block된 task 수행될 때 mutex 가지고 있는 상태로 resume
-			task_state[TID[0]] = Blocked;
+
+
+			task_state[TID[0]] = Ready;
 			mutex[0].flag = 1;
-			mutex[0].owner[TID[0]] = 1;
+			mutex[0].owner[0] = TID[0];
 			mutex[0].lock_counter = 1;
 			push_task_into_readyQ(TID[0], PRI[0], 0, PREEMPT);//readyQ로 추가해서 바로 실행하지 않는다.
-			return 1;
+			return reschedule(BIN,current_tid); // 높은 priority 인 TASK가 있으면 preempt 해야 한다.
+			
 		}
-		return 0;
+
+		return 1;
 	}
-	else if (mutex[0].owner[current_tid] == 1 && mutex[0].lock_counter > 1)
+	else if (mutex[0].lock_counter > 1)
 	{
-		mutex[0].flag = 1;
-		mutex[0].owner[current_tid] = 1;
 		mutex[0].lock_counter--;
+		return 1;
 	}
 	else
 	{
@@ -239,29 +263,55 @@ int mutex_delete(mutex_pt mutex)
 
 
 
-/*int mutex_time_checker(mutex_pt mutex)
+int mutex_time_checker(mutex_pt mutex,unsigned char tid)
 {
-	if (mutex[0].flag == 0 && mutex[0].owner[current_tid] == 0) //first time 잠금
-	{
-		mutex[0].flag == 1;
-		mutex[0].owner[current_tid] = 1;
-		mutex[0].lock_counter = 1;
-	}
-	else if (mutex[0].lock_counter >= 1 && mutex[0].owner[current_tid] == 1)
-	{
-		mutex[0].lock_counter++;
-	}
-	else
-	{
-		return 0;
-	}
+	
+		if (mutex[0].lock_call == 3 && mutex[0].flag == 0 && mutex[0].owner[0] == 0)
+		{
+			mutex[0].flag = 1;
+			mutex[0].owner[0] = tid;
+			mutex[0].lock_counter = 1;
+			return 1;
+		}
+		else if (mutex[0].lock_call == 3 && mutex[0].flag >= 1 && mutex[0].owner[0] == tid)
+		{
+			mutex[0].lock_counter++;
+			return 1;
+		}
+		else if (mutex[0].lock_call != 3 && mutex[0].owner[0] == 0)
+		{
+			get_task_from_WQ(TID, PRI);
+			push_task_into_readyQ(TID[0], PRI[0], 0, PREEMPT);
+			return reschedule(BIN, tid);
+		}
+	
+	else return 0;
 }
 
 int mutex_lock_timed(mutex_pt mutex,unsigned int time) 
 {
-	mutex[0].call = 1;
+	mutex[0].lock_call[current_tid] = 3;
+	if (mutex[0].flag == 0 && mutex[0].owner[0] == 0)//first time 
+	{
+		mutex[0].flag = 1;
+		mutex[0].owner[0] = current_tid;
+		mutex[0].lock_counter = 1;
+		return 1;
+	}
+	else if (mutex[0].lock_counter >= 1 && mutex[0].owner[0] == current_tid)// mutex 여려번 잠금할 수 있다.
+	{
+		mutex[0].lock_counter++;
+		return 1;
+	}
+	else
+	{
+		task_state[current_tid] = Blocked;
 
-}*/
+		enQ(current_tid, current_prio);
+		reschedule(BIN, current_prio);
+		return 1;
+	}
+}
 
 
 
