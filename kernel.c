@@ -218,7 +218,7 @@ int mutex_unlock(mutex_pt mutex)
 		mutex[0].owner[0] = 0;
 		mutex[0].lock_counter = 0;
 		mutex[0].lock_call[current_tid] = 0;
-		get_task_from_WQ(TID, PRI); // block중인 tid 흭득
+		get_task_from_WQ(); // block중인 tid 흭득
 		if (is_sleeping() && mutex[0].lock_call[TID[0]] > 0) // 지금 sleeping아닌 waitQ에서(block) task가 있으면 그리고 해당task 이미 mutex_lock 호출하면 
 		{	
 			//block된 task 수행될 때 mutex 가지고 있는 상태로 resume
@@ -280,7 +280,7 @@ int mutex_time_checker(mutex_pt mutex,unsigned char tid)
 		}
 		else if (mutex[0].lock_call[tid] != 3 && mutex[0].owner[0] == 0)
 		{
-			get_task_from_WQ(TID, PRI);
+			get_task_from_WQ();
 			push_task_into_readyQ(TID[0], PRI[0], 0, PREEMPT);
 			return reschedule(BIN, tid);
 		}
@@ -332,7 +332,7 @@ int sem_give(sem_pt sem)
 {
 	if (!(empty()))
 	{
-		get_task_from_WQ(&current_tid, &current_prio);
+		get_task_from_WQ();
 		push_task_into_readyQ(TID[0], PRI[0], current_pc[TID[0]], PREEMPT);
 		return 1;
 	}
@@ -393,7 +393,7 @@ int msgq_send(msgq_pt msgq_p , unsigned char* message)
 {
 	if (!(empty()))
 	{
-		get_task_from_WQ(&current_tid, &current_prio);
+		get_task_from_WQ();
 		push_task_into_readyQ(TID[0], PRI[0], current_pc[TID[0]], PREEMPT);
 		return 1;
 	}

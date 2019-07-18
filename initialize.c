@@ -26,8 +26,6 @@ void initialize() {
 
 
 
-
-
 	task_dyn_info[1].dyn_prio = task_static_info[1].prio;
 	task_dyn_info[1].act_cnt = 0;
 	task_dyn_info[2].dyn_prio = task_static_info[2].prio;
