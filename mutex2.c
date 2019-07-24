@@ -38,8 +38,6 @@ L_1_0:
 		return;
 L_1_1:
 	printf("시점 7 에서 태스크를 잠금 해제하고\n\n");
-
-
 	current_pc[1]++;
 	flag = mutex_unlock(mutex);
 	if (flag)
@@ -122,7 +120,7 @@ L_3_2:
 	if (flag)
 		return;
 L_3_3:
-	printf("시점 6 에서 태스크 2가 뮤텍스 잠금 해제를 시도한다\n\n.");
+	printf("시점 6 에서 태스크 3가 뮤텍스 잠금 해제를 시도한다\n\n.");
 	current_pc[3]++;
 	flag = mutex_unlock(mutex);
 	if (flag)
@@ -140,7 +138,7 @@ void main()
 {
 	mutex_create(mutex);
 
-	printf("시점 1 중간 제일 낮은 우선순위로 태스크 2를 생선한다.\n\n");
+	printf("시점 1 중간 제일 낮은 우선순위로 태스크 3를 생선한다.\n\n");
 	task_create(3);
 	ubik_comp_start();
 

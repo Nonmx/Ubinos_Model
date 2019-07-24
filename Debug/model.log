@@ -1,2 +1,9 @@
-﻿  waitingQ.c
+﻿  code8.c
+  kernel.c
+  코드를 생성하고 있습니다...
+  L:\model\model\kernel.c(118) : warning C4715: 'task_sleep': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  L:\model\model\kernel.c(295) : warning C4715: 'mutex_time_checker': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  L:\model\model\kernel.c(372) : warning C4715: 'sem_time_checker': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  L:\model\model\kernel.c(334) : warning C4715: 'sem_give': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  L:\model\model\kernel.c(355) : warning C4716: 'sem_take_timed': 값을 반환해야 합니다.
   model.vcxproj -> L:\model\Debug\model.exe

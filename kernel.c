@@ -181,7 +181,7 @@ int mutex_lock(mutex_pt mutex)
 	else if (mutex[0].lock_counter >= 1 && mutex[0].owner== current_tid)// mutex 여려번 잠금할 수 있다.
 	{
 		mutex[0].lock_counter++;
-		return 0;
+		return 1;
 	}
 	else
 	{
@@ -243,12 +243,12 @@ int mutex_unlock(mutex_pt mutex)
 			
 		}
 
-		return 0;
+		return 1;
 	}
 	else if (mutex[0].lock_counter > 1)
 	{
 		mutex[0].lock_counter--;
-		return 0;
+		return 1;
 	}
 	else
 	{
@@ -288,19 +288,18 @@ int mutex_time_checker(mutex_pt mutex,unsigned char tid)//
 			mutex[0].lock_counter++;
 			return 1;
 		}
-		else if (mutex[0].lock_call[tid] != 3 && mutex[0].owner == 0)
+		else if (mutex[0].lock_call[tid] == 3 && !(mutex[0].owner == tid))
 		{
-			get_task_from_WQ(&temp_tid,&temp_prio);
-			push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid], PREEMPT);
-			return reschedule(BIN, tid);
+			return 0;
 		}
-	
-	else return 0;
 }
+
 
 int mutex_lock_timed(mutex_pt mutex,unsigned int time) 
 {
 	mutex[0].lock_call[current_tid] = 3;
+
+	return 1;
 }
 
 
@@ -324,7 +323,9 @@ int sem_give(sem_pt sem)
 	{
 		get_task_from_WQ(&temp_tid,&temp_prio);
 		push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid], PREEMPT);
-		return 1;
+		if (reschedule(BIN, current_tid))
+			return 1;// 높은 priority task 있으면 바로 수행
+		else return 0;//높은 priority 없으면 Round robin 발생가능성이 있다.
 	}
 	else
 	{
@@ -344,7 +345,7 @@ int sem_take(sem_pt sem)
 	else
 	{
 		push_task_into_WQ(current_tid, current_prio);
-		return(reschedule(API_msgq_receive, current_tid));
+		return(reschedule(API_sem_take, current_tid));
 	}
 }
 
@@ -385,7 +386,9 @@ int msgq_send(msgq_pt msgq_p , unsigned char* message)
 	{
 		get_task_from_WQ(&temp_tid,&temp_prio);
 		push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_prio], PREEMPT);
-		return 1;
+		if (reschedule(BIN, current_tid))
+			return 1;
+		else return 0;
 	}
 	else
 	{
