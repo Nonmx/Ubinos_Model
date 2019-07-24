@@ -20,7 +20,7 @@ extern unsigned char e_code = 0;
 //local var for ceiling priority
 unsigned char current_prio = 0;
 signed char current_tid = 0;
-int current_pc[NUM_OF_TASKS];
+int current_pc[NUM_OF_TASKS+1];
 
 /*functions*/
 

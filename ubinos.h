@@ -79,7 +79,7 @@ typedef struct {
 
 typedef struct {
 	 int flag;//-1 = mutex 없다, 0 = unlocked, 1 = locked
-	 unsigned char owner[1];//locked인 task 지정
+	 unsigned char owner;//locked인 task 지정
 	 unsigned int lock_counter;
      int lock_call[NUM_OF_TASKS];
 	 unsigned int tra_flag;
@@ -106,7 +106,7 @@ extern unsigned char current_prio;
 extern signed char current_tid;
 
 //Current current[NUM_OF_TASKS];
-extern int current_pc[NUM_OF_TASKS];
+extern int current_pc[NUM_OF_TASKS+1];
 
 extern unsigned char e_code;
 

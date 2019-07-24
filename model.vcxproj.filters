@@ -53,16 +53,13 @@
     <ClCompile Include="readyQ.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="waitingQ.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="messageQ.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code8.c">
+    <ClCompile Include="mutex4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

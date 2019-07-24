@@ -22,7 +22,7 @@ typedef struct queue {
 }Queue;
 
 extern unsigned char idx;
-extern int fron[MAX_PRIORITY + 1];
+extern int front[MAX_PRIORITY + 1];
 extern unsigned char k;
 extern int rear[MAX_PRIORITY + 1];
 extern unsigned char max_prio;
@@ -35,6 +35,7 @@ int reschedule(API api, unsigned char);
 int reschedule_2(unsigned char);
 void push_task_into_readyQ(unsigned char t, unsigned char p, int pc, push_type flag);
 void get_task_from_readyQ(unsigned char* t, unsigned char* p);
+void get_task_from_readyQ_position(unsigned char*, unsigned char*, mutex_pt);
 //void get_task_form_readyQ_RR(unsigned char *t, unsigned char *p, int);
 void initializeQueue();
 

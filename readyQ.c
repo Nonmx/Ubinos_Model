@@ -107,6 +107,8 @@ void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 		{
 			max_prio--;
 		}
+
+		printf("max_prio : %d\n\n", max_prio);
 		task_state[*t] = Running;
 		//printf("task_state[*t] -> %d\n\n", task_state[*t]);
 		//if (task_state[*t][act_counter[*t]] == Running)
@@ -115,11 +117,41 @@ void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 	
 }
 
+
+void get_task_from_readyQ_position(unsigned char* t, unsigned char* p, mutex_pt mutex)
+{
+	int i = 0;
+	if (is_empty() && !(is_sleeping()))
+	{
+		printf("Queue is empty\n");
+		current_tid = -1;
+	}
+	else if (!is_empty())
+	{
+
+		*t = readyQ[task_dyn_info[mutex[0].owner].dyn_prio][front[task_dyn_info[mutex[0].owner].dyn_prio]].tid;
+		*p = task_dyn_info[mutex[0].owner].dyn_prio;
+		cur_activation_order[*t] = readyQ[max_prio][front[max_prio]].activation_order;
+		//current_pc[*t] = readyQ[max_prio][front[max_prio]].pc;
+		//truncate popped index
+		readyQ[task_dyn_info[mutex[0].owner].dyn_prio][front[task_dyn_info[mutex[0].owner].dyn_prio]].tid = -1;
+		readyQ[task_dyn_info[mutex[0].owner].dyn_prio][front[task_dyn_info[mutex[0].owner].dyn_prio]].pc = -1;
+		//redefine front variable
+		front[task_dyn_info[mutex[0].owner].dyn_prio] = (front[task_dyn_info[mutex[0].owner].dyn_prio] + 1) % MAX_QUEUE_LENGTH;
+		size[*p]--;
+		wholesize--;
+
+		//task_state[*t] = Running;
+	}
+
+}
+
+
 extern signed char current_tid;
 extern unsigned char current_prio;
 
 int reschedule(API api, unsigned char tid) { //work for priority scheduling
-	if (is_idle() || api == API_TerminateTask || api == API_task_sleep || api == API_sem_take|| api == API_msgq_receive )
+	if (is_idle() || api == API_TerminateTask || api == API_task_sleep || api == API_sem_take|| api == API_msgq_receive || api == API_mutex_lock )
 	{
 		get_task_from_readyQ(&current_tid, &current_prio);
 		if (current_tid == -1)
@@ -159,3 +191,5 @@ int reschedule_2(unsigned char tid) {//working for round robin scheduling
 	else
 		return 0;
 }
+
+
