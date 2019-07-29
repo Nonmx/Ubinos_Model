@@ -28,8 +28,8 @@ int task_create(unsigned char reftask)
 {
 	api = API_task_create;
 
-	//if (task_static_info[reftask].max_act_cnt == 0)
-		//initialize();
+	if (task_static_info[reftask].max_act_cnt == 0)
+		initialize();
 
 	//check whether max activation count has been reached
 	if (reftask < 0 || reftask > NUM_OF_TASKS)
