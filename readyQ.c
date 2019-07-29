@@ -176,20 +176,18 @@ int reschedule(API api, unsigned char tid) { //work for priority scheduling
 	}
 }
 
-int reschedule_2(unsigned char tid) {//working for round robin scheduling
-	
-		if (task_dyn_info[tid].dyn_prio == max_prio || task_dyn_info[tid].dyn_prio == P)
-		{
-			push_task_into_readyQ(tid, task_dyn_info[tid].dyn_prio, current_pc[tid], PREEMPT);
-			get_task_from_readyQ(&current_tid, &current_prio);
-			if (current_tid == -1)
-				return 0;
-			else
-				return 1;
-		}
-	
-	else
-		return 0;
-}
 
+
+int Round_Rpbin_Schedule()
+{
+	if (Hava_to_RR())
+	{
+		push_task_into_readyQ(current_tid, task_static_info[current_tid].prio, current_pc[current_tid], PREEMPT);
+		get_task_from_readyQ(&current_tid, &current_prio);
+		if (current_tid == -1)
+			return 0;
+		else
+			return 1;
+	}
+}
 

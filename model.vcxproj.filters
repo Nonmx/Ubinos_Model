@@ -59,7 +59,7 @@
     <ClCompile Include="messageQ.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code8.c">
+    <ClCompile Include="mutex_ver.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

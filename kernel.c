@@ -28,8 +28,8 @@ int task_create(unsigned char reftask)
 {
 	api = API_task_create;
 
-	if (task_static_info[reftask].max_act_cnt == 0)
-		initialize();
+	//if (task_static_info[reftask].max_act_cnt == 0)
+		//initialize();
 
 	//check whether max activation count has been reached
 	if (reftask < 0 || reftask > NUM_OF_TASKS)
@@ -137,7 +137,7 @@ int time_checker(unsigned char tid)//Wake up the task
 			return 1;
 
 		}
-		else if ((reschedule_2(current_tid)) != 0)//round robin
+		else if (Round_Rpbin_Schedule())//round robin
 		{
 			return 1;
 		}
@@ -421,7 +421,7 @@ void ubik_comp_start()
 	if (os_on == OFF)
 	{
 		os_on = ON;
-		running(); //call tasks here
+		//running(); //call tasks here
 	}
 }
 

@@ -32,7 +32,7 @@ extern int wholesize;
 #define is_empty() (wholesize == 0)
 extern Queue readyQ[MAX_PRIORITY + 1][MAX_QUEUE_LENGTH];
 int reschedule(API api, unsigned char);
-int reschedule_2(unsigned char);
+int Round_Rpbin_Schedule();
 void push_task_into_readyQ(unsigned char t, unsigned char p, int pc, push_type flag);
 void get_task_from_readyQ(unsigned char* t, unsigned char* p);
 void get_task_from_readyQ_position(unsigned char*, unsigned char*, mutex_pt);

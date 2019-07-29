@@ -188,7 +188,7 @@ L_3_3:
 void main()
 {
 
-	msgq_create(_g_msgq, 15, 0);
+	msgq_create(_g_msgq, 25, 0);
 
 	task_create(1);
 	task_create(2);

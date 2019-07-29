@@ -133,11 +133,11 @@
     <ClInclude Include="waitingQ.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code8.c" />
     <ClCompile Include="initialize.c" />
     <ClCompile Include="kernel.c" />
     <ClCompile Include="messageQ.c" />
     <ClCompile Include="model.c" />
+    <ClCompile Include="mutex_ver.c" />
     <ClCompile Include="readyQ.c" />
     <ClCompile Include="waitingQ.c" />
   </ItemGroup>

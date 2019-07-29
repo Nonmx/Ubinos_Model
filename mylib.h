@@ -34,6 +34,19 @@ static __inline char is_sleeping()
 	return a > 0 ? 1 : 0;
 }
 
+static __inline char Hava_to_RR()// readyQ에서 수행중인 task과 똑같은 priority있는지 check
+{
+	char a = 0;
+	int i = 0;
+	for (i = 0; i < MAX_QUEUE_LENGTH; i++)
+	{
+		if(readyQ[current_prio][i].tid >= '/0')
+			a++;
+	}
+	return a > 0 ? 1 : 0;
+
+}
+
 /*static __inline int task_position(unsigned char tid,unsigned char prio)
 {
 	for (int i = 0; i < MAX_QUEUE_LENGTH; i++)
