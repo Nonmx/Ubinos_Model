@@ -178,7 +178,7 @@ int reschedule(API api, unsigned char tid) { //work for priority scheduling
 
 
 
-int Round_Rpbin_Schedule()
+int Round_Robin_Schedule()
 {
 	if (Hava_to_RR())
 	{
@@ -189,5 +189,7 @@ int Round_Rpbin_Schedule()
 		else
 			return 1;
 	}
+	else
+		return 0;
 }
 

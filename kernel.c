@@ -137,7 +137,7 @@ int time_checker(unsigned char tid)//Wake up the task
 			return 1;
 
 		}
-		else if (Round_Rpbin_Schedule())//round robin
+		else if (Round_Robin_Schedule())//round robin
 		{
 			return 1;
 		}

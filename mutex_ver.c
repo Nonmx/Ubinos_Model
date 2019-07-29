@@ -15,7 +15,7 @@ unsigned char tp_tid;
 unsigned char tp_prio;
 mutex_pt mutex;
 
-extern int Round_Rpbin_Schedule();
+extern int Round_Robin_Schedule();
 
 void main()
 {
@@ -27,22 +27,31 @@ void main()
 
 	srand((unsigned)time(NULL));
 
-	int s = 0;
+	/*int s = 0;
 	for (int j = 0; j < 5; j++)
 	{
 		s++;
-		//task_static_info[T_id[i]].prio = rand() % 5 + 1;
-		//printf("the priority : %d of Tid: %d \n\n", task_static_info[T_id[i]].prio, T_id[i]);
+		task_static_info[T_id[i]].prio = rand() % 5 + 1;
+		printf("the priority : %d of Tid: %d \n\n", task_static_info[T_id[i]].prio, T_id[i]);
 		task_static_info[T_id[j]].prio = s;
 		task_static_info[T_id[j]].max_act_cnt = 1;
 		task_dyn_info[T_id[j]].dyn_prio = task_static_info[T_id[j]].prio;
 		task_dyn_info[T_id[j]].act_cnt = 0;
-	}
+	}*/
 
 
 
 	for (int i = 0; i < 5; i++)
 	{
+
+		task_static_info[T_id[i]].prio = rand() % 5 + 1;
+		printf("the priority : %d of Tid: %d \n\n", task_static_info[T_id[i]].prio, T_id[i]);
+
+		task_static_info[T_id[i]].max_act_cnt = 1;
+		task_dyn_info[T_id[i]].dyn_prio = task_static_info[T_id[i]].prio;
+		task_dyn_info[T_id[i]].act_cnt = 0;
+
+
 		flag = task_create(T_id[i]);
 		if (flag)
 			printf("task_create is created sucess,the tid of running : %d \n\n", current_tid);
@@ -51,7 +60,7 @@ void main()
 		tp_tid = current_tid;
 		tp_prio = current_prio;
 
-		flag = Round_Rpbin_Schedule();
+		flag = Round_Robin_Schedule();
 		if (flag)
 			printf("round robin sucess and before round robin tid : %d \n after round robin tid : %d\n\n", tp_tid, current_tid);
 		else printf("round robin failed and before round robin tid : %d \n after round robin tid : %d\n\n", tp_tid, current_tid);
@@ -59,8 +68,8 @@ void main()
 
 		flag = mutex_lock(mutex);
 		if (flag)
-			printf("mutex_lock sucessful\n, the mutex owner is tid : %d\n\n", mutex[0].owner);
-		else printf("mutex_lock failed \n, the mutex owner is tid : %d\n\n", mutex[0].owner);
+			printf("mutex_lock sucessful\n, the mutex owner is tid : %d and priority is : %d \n\n", mutex[0].owner,current_prio);
+		else printf("mutex_lock failed \n, the mutex owner is tid : %d and priority is : %d\n\n", mutex[0].owner,current_prio);
 
 		srand((unsigned)time(NULL));
 		int checker = rand() % 1 + 0;
