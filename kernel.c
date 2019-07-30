@@ -314,7 +314,7 @@ int sem_give(sem_pt sem)
 	{
 		get_task_from_WQ(&temp_tid,&temp_prio);
 		push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid], PREEMPT);
-		return reschedule(BIN, current_tid)
+		return reschedule(BIN, current_tid);
 		//	return 1;// 높은 priority task 있으면 바로 수행
 	//	else return 0;//높은 priority 없으면 Round robin 발생가능성이 있다.
 	}
