@@ -182,7 +182,7 @@ int Round_Robin_Schedule()
 {
 	if (Hava_to_RR())
 	{
-		push_task_into_readyQ(current_tid, task_static_info[current_tid].prio, current_pc[current_tid], PREEMPT);
+		push_task_into_readyQ(current_tid, task_dyn_info[current_tid].dyn_prio, current_pc[current_tid], PREEMPT);
 		get_task_from_readyQ(&current_tid, &current_prio);
 		if (current_tid == -1)
 			return 0;

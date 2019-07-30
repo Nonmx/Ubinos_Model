@@ -39,15 +39,6 @@ int task_create(unsigned char reftask)
 	}
 	else if (task_dyn_info[reftask].act_cnt < task_static_info[reftask].max_act_cnt)
 	{
-		if (task_state[reftask] == Suspended)
-		{
-			int i;
-			//When it is transferred from suspended state, then all events are cleared.
-			for (i = 0; i < NUM_EVENTS; i++)
-			{
-				//Event_Table[i].task_alloc[reftask] = 0; //Cleared
-			}
-		}
 		task_dyn_info[reftask].act_cnt++;
 		push_task_into_readyQ(reftask, task_static_info[reftask].prio, 0, 0);
 	}
