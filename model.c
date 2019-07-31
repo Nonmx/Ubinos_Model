@@ -40,7 +40,7 @@ extern int act_counter[NUM_OF_TASKS + 1];
 			push_task_into_readyQ(i, current_prio, 0, 0);
 			//task_state[i][act_counter[i]] = Ready;
 		}
-		
+		i++;
 	}
 	i = 0;
 

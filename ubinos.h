@@ -40,10 +40,9 @@ typedef enum API {
 	API_task_sleep,
 	API_sem_take,
 	API_msgq_receive,
-	API_msgq_send,
 	API_mutex_lock,
-	API_sem_give,
-	API_mutex_unlock
+	API_msgq_send,
+	API_sem_give
 }API;
 extern API api;
 
@@ -88,8 +87,8 @@ typedef struct {
 }task_dynamic_stat;
 
 typedef struct {
-	 int flag;//-1 = mutex ¾ø´Ù, 0 = unlocked, 1 = locked
-	 unsigned char owner;//lockedÀÎ task ÁöÁ¤
+	 int flag;//-1 = mutex ï¿½ï¿½ï¿½ï¿½, 0 = unlocked, 1 = locked
+	 unsigned char owner;//lockedï¿½ï¿½ task ï¿½ï¿½ï¿½ï¿½
 	 unsigned int lock_counter;
      int lock_call[NUM_OF_TASKS];
 	 unsigned int tra_flag;
@@ -98,16 +97,9 @@ typedef struct {
 
 typedef struct {
 	int counter;
-	//int flag;
 	unsigned int lock_call[NUM_OF_TASKS];
-	//unsigned char Lock; //lockedÀÎ task ÁöÁ¤
-}sem_pt;
-
-#define messageQ_SIZE 25
-
-typedef struct {
-	unsigned char message[messageQ_SIZE];
-}MQ;
+	//unsigned char Lock; //lockedï¿½ï¿½ task ï¿½ï¿½ï¿½ï¿½
+}sem_pt[1];
 
 #define messageQ_SIZE 25
 
@@ -118,11 +110,7 @@ typedef struct{
 typedef struct {
 	int flag;
 	MQ Message_Queue[messageQ_SIZE];
-<<<<<<< HEAD
-}msgq_pt;
-=======
 }msgq_pt[1];
->>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 
 /*typedef struct{
 	unsigned char prio;
@@ -151,6 +139,7 @@ extern int PC[NUM_OF_TASKS]; //Program Counter
 
 extern void initialize();
 extern void running();
+extern void startup_process(unsigned char min, unsigned char max);
 
 
 //Time-dependent definitions
