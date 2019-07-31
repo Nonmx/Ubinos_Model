@@ -24,23 +24,41 @@ extern signed char current_tid;
 unsigned char current_prio;
 //unsigned char e_code;
 extern int act_counter[NUM_OF_TASKS + 1];
-int task_create(unsigned char reftask)
+int task_create(unsigned char tid)
 {
 	api = API_task_create;
 
+<<<<<<< HEAD
+	if (task_static_info[tid].max_act_cnt == 0)
+=======
 	if (task_static_info[reftask].max_act_cnt == 0)
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 		initialize();
 
 	//check whether max activation count has been reached
-	if (reftask < 0 || reftask > NUM_OF_TASKS)
+	if (tid < 0 || tid > NUM_OF_TASKS)
 	{
 		e_code = E_OS_ID;
 		return 0;
 	}
-	else if (task_dyn_info[reftask].act_cnt < task_static_info[reftask].max_act_cnt)
+	else if (task_dyn_info[tid].act_cnt < task_static_info[tid].max_act_cnt)
 	{
+<<<<<<< HEAD
+		if (task_state[tid] == Suspended)
+		{
+			int i;
+			//When it is transferred from suspended state, then all events are cleared.
+			for (i = 0; i < NUM_EVENTS; i++)
+			{
+				//Event_Table[i].task_alloc[reftask] = 0; //Cleared
+			}
+		}
+		task_dyn_info[tid].act_cnt++;
+		push_task_into_readyQ(tid, task_static_info[tid].prio, 0, 0);
+=======
 		task_dyn_info[reftask].act_cnt++;
 		push_task_into_readyQ(reftask, task_static_info[reftask].prio, 0, 0);
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 	}
 	else
 	{
@@ -50,7 +68,7 @@ int task_create(unsigned char reftask)
 	}
 	/* background task of Erika? */
 	if (current_tid == -1) {
-		current_tid = reftask;
+		current_tid = tid;
 		return reschedule(API_task_create, current_tid);
 	}
 	return reschedule(API_task_create, current_tid);
@@ -241,7 +259,7 @@ int mutex_unlock(mutex_pt mutex)
 			mutex[0].owner = temp_tid;
 			mutex[0].lock_counter = 1;
 			push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid], PREEMPT);//readyQ로 추가해서 바로 실행하지 않는다.
-			return reschedule(BIN,current_tid); // 높은 priority 인 TASK가 있으면 preempt 해야 한다.
+			return reschedule(API_mutex_unlock,current_tid); // 높은 priority 인 TASK가 있으면 preempt 해야 한다.
 			
 		}
 
@@ -306,25 +324,35 @@ int mutex_lock_timed(mutex_pt mutex,unsigned int time)
 
 
 
+//sem 부분
 
-int sem_create(sem_pt sem)
+int sem_create(sem_pt* sem)
 {
-	sem[0].counter = 0;
+	sem->counter = 0;
 	return 1;
 }
 
-int sem_delete(sem_pt sem)
+int sem_delete(sem_pt* sem)
 {
-	sem[0].counter = -1;
+	sem->counter = -1;
 	return 1;
 }
 
-int sem_give(sem_pt sem)
+int sem_give(sem_pt* sem)
 {
 	if (!(empty()))
 	{
 		get_task_from_WQ(&temp_tid,&temp_prio);
 		push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid], PREEMPT);
+<<<<<<< HEAD
+		return reschedule(API_sem_give, current_tid);
+		//	return 1;// 높은 priority task 있으면 바로 수행
+		//else return 0;//높은 priority 없으면 Round robin 발생가능성이 있다.
+	}
+	else
+	{
+		sem->counter = sem->counter + 1;
+=======
 		return reschedule(BIN, current_tid);
 		//	return 1;// 높은 priority task 있으면 바로 수행
 	//	else return 0;//높은 priority 없으면 Round robin 발생가능성이 있다.
@@ -332,16 +360,17 @@ int sem_give(sem_pt sem)
 	else
 	{
 		sem[0].counter = sem[0].counter + 1;
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 		return 1;
 	}
 }
 
 
-int sem_take(sem_pt sem)
+int sem_take(sem_pt* sem)
 {
-	if (sem[0].counter > 0)
+	if (sem->counter > 0)
 	{
-		sem[0].counter = sem[0].counter - 1;
+		sem->counter = sem->counter - 1;
 		return 1;
 
 	}
@@ -352,18 +381,18 @@ int sem_take(sem_pt sem)
 	}
 }
 
-int sem_take_timed(sem_pt sem, unsigned int timed) 
+int sem_take_timed(sem_pt* sem, unsigned int timed) 
 {
-	sem[0].lock_call[current_tid] = 3; // 어느 태스크가 sem_task_time API 호출하는지 기록
+	sem->lock_call[current_tid] = current_tid; // 어느 태스크가 sem_task_time API 호출하는지 기록
 }
 
-int sem_time_checker(sem_pt sem, unsigned char tid)
+int sem_time_checker(sem_pt* sem, unsigned char tid)
 {
-	if (sem[0].lock_call[tid] == 3)
+	if (sem->lock_call[tid] == tid)
 	{
-		if (sem[0].counter > 0)
+		if (sem->counter > 0)
 		{
-			sem[0].counter = sem[0].counter - 1;
+			sem->counter = sem[0].counter - 1;
 			return 1;
 		}
 		else
@@ -376,44 +405,79 @@ int sem_time_checker(sem_pt sem, unsigned char tid)
 
 
 //message Q
-int msgq_create(msgq_pt msgq_p, unsigned int msgsize, unsigned int maxcount) //for noting
+int msgq_create(msgq_pt *msgq_p, unsigned int msgsize, unsigned int maxcount) 
 {
+<<<<<<< HEAD
+	//messagq queue 자체가 static로 정의
+	msgq_p->flag = 1;
+=======
 	msgq_p[0].flag = 1; //created scuessful
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 	return 1;
 }
 
 
 
-int msgq_send(msgq_pt msgq_p , unsigned char* message) 
+int msgq_send(msgq_pt* msgq_p , unsigned char* message) 
 {
+<<<<<<< HEAD
+	if (!(empty()) && msgq_p->flag)
+=======
 	if (!(empty()) && msgq_p[0].flag == 1)
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 	{
-		get_task_from_WQ(&temp_tid,&temp_prio);
+		get_task_from_WQ(&temp_tid, &temp_prio);
 		push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_prio], PREEMPT);
+<<<<<<< HEAD
+		return reschedule(API_msgq_send, current_tid);
+			//return 1;
+		//else return 0;
+	}
+	else if (msgq_p->flag)
+	{
+		push_message_into_MQ(msgq_p, message);
+=======
 		return reschedule(BIN, current_tid);
 	}
 	else if(msgq_p[0].flag == 1)
 	{
 		push_message_into_MQ(msgq_p,message);
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 		return 1;
 
 	}
 	else return 0;
 }
 
-int msgq_receive(msgq_pt msgq_p, unsigned char* message)
+int msgq_receive(msgq_pt *msgq_p, unsigned char* message)
 {
+<<<<<<< HEAD
+	if (!(MQ_empty()) && msgq_p->flag)
+	{
+		get_message_from_MQ(msgq_p, message);
+		//printf("mess is %s\n\n", message);
+		return 1;
+	}
+	else if (msgq_p->flag)
+
+=======
 	if (!(MQ_empty ()) && msgq_p[0].flag == 1)
 	{
 		get_message_from_MQ(msgq_p,message);
 		return 0;
 	}
 	else if(msgq_p[0].flag == 1)
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 	{
 		push_task_into_WQ(current_tid, current_prio);
 		return(reschedule(API_msgq_receive, current_tid));
 	}
+<<<<<<< HEAD
+	else
+		return 0;
+=======
 	else return 0;
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 }
 
 int os_on;
@@ -425,7 +489,11 @@ void ubik_comp_start()
 	if (os_on == OFF)
 	{
 		os_on = ON;
+<<<<<<< HEAD
+		running(); //call tasks here
+=======
 	//	running(); //call tasks here
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 	}
 }
 

@@ -10,6 +10,7 @@ Author : Yang Song
 #include "config.h"
 
 
+
 unsigned char ecode;
 unsigned char error[NUM_OF_TASKS];
 
@@ -40,16 +41,16 @@ int mutex_lock_timed(mutex_pt, unsigned int);
 int mutex_time_checker(mutex_pt, unsigned char);
 
 //part of semaphore
-int sem_create(sem_pt);
-int sem_delete(sem_pt);
-int sem_take(sem_pt);
-int sem_give(sem_pt);
-int sem_take_timed(sem_pt, unsigned int);
+int sem_create(sem_pt*);
+int sem_delete(sem_pt*);
+int sem_take(sem_pt*);
+int sem_give(sem_pt*);
+int sem_take_timed(sem_pt*, unsigned int);
 
 //part of messahe Q
-int msgq_create(msgq_pt,unsigned int,unsigned int);
-int msgq_receive(msgq_pt,unsigned char*);
-int msgq_send(msgq_pt,unsigned char*);
+int msgq_create(msgq_pt*,unsigned int,unsigned int);
+int msgq_receive(msgq_pt*,unsigned char*);
+int msgq_send(msgq_pt*,unsigned char*);
 
 
 extern int os_on;

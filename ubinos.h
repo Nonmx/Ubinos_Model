@@ -33,7 +33,17 @@ typedef enum state {
 }State;
 
 typedef enum API {
-	API_task_create, API_task_suspend, API_TerminateTask, API_task_resume, API_task_sleep,API_sem_take,API_msgq_receive,API_mutex_lock,BIN
+	API_task_create, 
+	API_task_suspend, 
+	API_TerminateTask, 
+	API_task_resume, 
+	API_task_sleep,
+	API_sem_take,
+	API_msgq_receive,
+	API_msgq_send,
+	API_mutex_lock,
+	API_sem_give,
+	API_mutex_unlock
 }API;
 extern API api;
 
@@ -88,9 +98,16 @@ typedef struct {
 
 typedef struct {
 	int counter;
+	//int flag;
 	unsigned int lock_call[NUM_OF_TASKS];
 	//unsigned char Lock; //locked¿Œ task ¡ˆ¡§
-}sem_pt[1];
+}sem_pt;
+
+#define messageQ_SIZE 25
+
+typedef struct {
+	unsigned char message[messageQ_SIZE];
+}MQ;
 
 #define messageQ_SIZE 25
 
@@ -101,7 +118,11 @@ typedef struct{
 typedef struct {
 	int flag;
 	MQ Message_Queue[messageQ_SIZE];
+<<<<<<< HEAD
+}msgq_pt;
+=======
 }msgq_pt[1];
+>>>>>>> e94333783459236c94766bd2b4167d37f9f48215
 
 /*typedef struct{
 	unsigned char prio;
@@ -130,7 +151,6 @@ extern int PC[NUM_OF_TASKS]; //Program Counter
 
 extern void initialize();
 extern void running();
-extern void startup_process(unsigned char min, unsigned char max);
 
 
 //Time-dependent definitions

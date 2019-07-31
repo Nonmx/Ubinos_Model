@@ -25,7 +25,7 @@ int current_pc[NUM_OF_TASKS+1];
 /*functions*/
 
 extern int act_counter[NUM_OF_TASKS + 1];
-void startup_process(unsigned char s, unsigned char e)
+/*void startup_process(unsigned char s, unsigned char e)
 {
 	unsigned char i = s;
 	int j = 0;
@@ -33,14 +33,14 @@ void startup_process(unsigned char s, unsigned char e)
 	//unsigned char tid;
 	while (i <= e)
 	{
-		/*if (task_static_info[i].autostart)
+		if (task_static_info[i].autostart)
 		{
 			task_dyn_info[i].act_cnt++;
 			current_prio = task_static_info[i].prio;
 			push_task_into_readyQ(i, current_prio, 0, 0);
 			//task_state[i][act_counter[i]] = Ready;
-		}*/
-		i++;
+		}
+		
 	}
 	i = 0;
 
@@ -56,5 +56,5 @@ void startup_process(unsigned char s, unsigned char e)
 		//task_state[current_tid][act_counter[current_tid]] = Running;
 		//assert(get_running_task_num() == 1);
 	}
-}
+}*/
 
