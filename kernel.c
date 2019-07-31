@@ -394,7 +394,7 @@ int msgq_send(msgq_pt msgq_p , unsigned char* message)
 	}
 	else if(msgq_p[0].flag == 1)
 	{
-		push_message_into_MQ(message);
+		push_message_into_MQ(msgq_p,message);
 		return 1;
 
 	}
@@ -405,7 +405,7 @@ int msgq_receive(msgq_pt msgq_p, unsigned char* message)
 {
 	if (!(MQ_empty ()) && msgq_p[0].flag == 1)
 	{
-		get_message_from_MQ(message);
+		get_message_from_MQ(msgq_p,message);
 		return 0;
 	}
 	else if(msgq_p[0].flag == 1)

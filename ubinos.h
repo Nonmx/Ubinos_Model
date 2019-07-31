@@ -92,8 +92,15 @@ typedef struct {
 	//unsigned char Lock; //lockedÀÎ task ÁöÁ¤
 }sem_pt[1];
 
+#define messageQ_SIZE 25
+
+typedef struct{
+	unsigned char message[messageQ_SIZE];
+}MQ;
+
 typedef struct {
 	int flag;
+	MQ Message_Queue[messageQ_SIZE];
 }msgq_pt[1];
 
 /*typedef struct{

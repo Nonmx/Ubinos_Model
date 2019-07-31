@@ -15,7 +15,7 @@ Date: 08/09/2016
 #include "mylib.h"
 
 
-extern unsigned char e_code = 0;
+extern unsigned char e_code;
 
 //local var for ceiling priority
 unsigned char current_prio = 0;
