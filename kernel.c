@@ -184,11 +184,22 @@ int mutex_lock(mutex_pt mutex)
 
 			task_state[current_tid] = Blocked;
 			push_task_into_WQ(current_tid, current_prio); // 수행중인 task가 lock 될 수 없으면 waitQ로 push 한다
-
-			get_task_from_readyQ_position(&temp_tid,&temp_prio,mutex);
-			task_dyn_info[temp_tid].dyn_prio = After_temp; // priorit inherit
-			push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid], PREEMPT); // mutex가지고 있는 낮은 priority인 task가 먼저 readyQ에서 꺼내서 priority 상속한 다음에 readyQ로 다시 push 한다
-			
+			int loc = 0;
+			for(loc = front[task_dyn_info[mutex[0].owner].dyn_prio];loc< rear[task_dyn_info[mutex[0].owner].dyn_prio];loc++)
+			{
+				//mutex 가지고 있는 task 꺼낼 때 까지 
+				get_task_from_readyQ_position(&temp_tid,&temp_prio,mutex);
+				if(temp_tid == mutex[0].owner)
+				{
+					task_dyn_info[temp_tid].dyn_prio = After_temp; // priorit inherit
+					push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid], PREEMPT); // mutex가지고 있는 낮은 priority인 task가 먼저 readyQ에서 꺼내서 priority 상속한 다음에 readyQ로 다시 push 한다
+					break;
+				}
+				else
+				{
+					push_task_into_readyQ(temp_tid,task_dyn_info[temp_tid].dyn_prio,current_pc[temp_tid],PREEMPT						);
+				}
+			}
 			return reschedule(API_mutex_lock, current_tid);
 
 
@@ -314,7 +325,7 @@ int sem_give(sem_pt sem)
 	{
 		get_task_from_WQ(&temp_tid,&temp_prio);
 		push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid], PREEMPT);
-		return reschedule(BIN, current_tid)
+		return reschedule(BIN, current_tid);
 		//	return 1;// 높은 priority task 있으면 바로 수행
 	//	else return 0;//높은 priority 없으면 Round robin 발생가능성이 있다.
 	}
@@ -367,6 +378,7 @@ int sem_time_checker(sem_pt sem, unsigned char tid)
 //message Q
 int msgq_create(msgq_pt msgq_p, unsigned int msgsize, unsigned int maxcount) //for noting
 {
+	msgq_p[0].flag = 1; //created scuessful
 	return 1;
 }
 
@@ -374,34 +386,34 @@ int msgq_create(msgq_pt msgq_p, unsigned int msgsize, unsigned int maxcount) //f
 
 int msgq_send(msgq_pt msgq_p , unsigned char* message) 
 {
-	if (!(empty()))
+	if (!(empty()) && msgq_p[0].flag == 1)
 	{
 		get_task_from_WQ(&temp_tid,&temp_prio);
 		push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_prio], PREEMPT);
-		if (reschedule(BIN, current_tid))
-			return 1;
-		else return 0;
+		return reschedule(BIN, current_tid);
 	}
-	else
+	else if(msgq_p[0].flag == 1)
 	{
 		push_message_into_MQ(message);
 		return 1;
 
 	}
+	else return 0;
 }
 
 int msgq_receive(msgq_pt msgq_p, unsigned char* message)
 {
-	if (!(MQ_empty ()))
+	if (!(MQ_empty ()) && msgq_p[0].flag == 1)
 	{
 		get_message_from_MQ(message);
 		return 0;
 	}
-	else
+	else if(msgq_p[0].flag == 1)
 	{
 		push_task_into_WQ(current_tid, current_prio);
 		return(reschedule(API_msgq_receive, current_tid));
 	}
+	else return 0;
 }
 
 int os_on;
@@ -413,7 +425,7 @@ void ubik_comp_start()
 	if (os_on == OFF)
 	{
 		os_on = ON;
-		running(); //call tasks here
+	//	running(); //call tasks here
 	}
 }
 

@@ -93,7 +93,7 @@ typedef struct {
 }sem_pt[1];
 
 typedef struct {
-	unsigned owner[NUM_OF_TASKS];
+	int flag;
 }msgq_pt[1];
 
 /*typedef struct{
