@@ -118,7 +118,7 @@ void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 }
 
 
-void get_task_from_readyQ_position(unsigned char* t, unsigned char* p, mutex_pt mutex)
+void get_task_from_readyQ_position(unsigned char* t, unsigned char* p, mutex_pt* mutex)
 {
 	int i = 0;
 	if (is_empty() && !(is_sleeping()))
@@ -129,15 +129,15 @@ void get_task_from_readyQ_position(unsigned char* t, unsigned char* p, mutex_pt 
 	else if (!is_empty())
 	{
 
-		*t = readyQ[task_dyn_info[mutex[0].owner].dyn_prio][front[task_dyn_info[mutex[0].owner].dyn_prio]].tid;
-		*p = task_dyn_info[mutex[0].owner].dyn_prio;
+		*t = readyQ[task_dyn_info[mutex->owner].dyn_prio][front[task_dyn_info[mutex->owner].dyn_prio]].tid;
+		*p = task_dyn_info[mutex->owner].dyn_prio;
 		cur_activation_order[*t] = readyQ[max_prio][front[max_prio]].activation_order;
 		//current_pc[*t] = readyQ[max_prio][front[max_prio]].pc;
 		//truncate popped index
-		readyQ[task_dyn_info[mutex[0].owner].dyn_prio][front[task_dyn_info[mutex[0].owner].dyn_prio]].tid = -1;
-		readyQ[task_dyn_info[mutex[0].owner].dyn_prio][front[task_dyn_info[mutex[0].owner].dyn_prio]].pc = -1;
+		readyQ[task_dyn_info[mutex->owner].dyn_prio][front[task_dyn_info[mutex->owner].dyn_prio]].tid = -1;
+		readyQ[task_dyn_info[mutex->owner].dyn_prio][front[task_dyn_info[mutex->owner].dyn_prio]].pc = -1;
 		//redefine front variable
-		front[task_dyn_info[mutex[0].owner].dyn_prio] = (front[task_dyn_info[mutex[0].owner].dyn_prio] + 1) % MAX_QUEUE_LENGTH;
+		front[task_dyn_info[mutex->owner].dyn_prio] = (front[task_dyn_info[mutex->owner].dyn_prio] + 1) % MAX_QUEUE_LENGTH;
 		size[*p]--;
 		wholesize--;
 

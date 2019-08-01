@@ -88,12 +88,12 @@ typedef struct {
 }task_dynamic_stat;
 
 typedef struct {
-	 int flag;//-1 = mutex ����, 0 = unlocked, 1 = locked
-	 unsigned char owner;//locked�� task ����
+	 int flag;// -1 = mutex 없다, 0 = unlocked, 1 = locked
+	 unsigned char owner;//locked 가지고 있는  task
 	 unsigned int lock_counter;
-     int lock_call[NUM_OF_TASKS];
+     	 int lock_call[NUM_OF_TASKS];
 	 unsigned int tra_flag;
-}mutex_pt[1];
+}mutex_pt;
 
 
 typedef struct {

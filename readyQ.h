@@ -35,7 +35,8 @@ int reschedule(API api, unsigned char);
 int Round_Robin_Schedule();
 void push_task_into_readyQ(unsigned char t, unsigned char p, int pc, push_type flag);
 void get_task_from_readyQ(unsigned char* t, unsigned char* p);
-void get_task_from_readyQ_position(unsigned char*, unsigned char*, mutex_pt);
+//mutex 가지고 있는 task 꺼내기 
+void get_task_from_readyQ_position(unsigned char*, unsigned char*, mutex_pt*);
 //void get_task_form_readyQ_RR(unsigned char *t, unsigned char *p, int);
 void initializeQueue();
 
