@@ -42,7 +42,8 @@ typedef enum API {
 	API_msgq_receive,
 	API_mutex_lock,
 	API_msgq_send,
-	API_sem_give
+	API_sem_give,
+	API_mutex_unlock
 }API;
 extern API api;
 
@@ -99,7 +100,7 @@ typedef struct {
 	int counter;
 	unsigned int lock_call[NUM_OF_TASKS];
 	//unsigned char Lock; //locked�� task ����
-}sem_pt[1];
+}sem_pt;
 
 #define messageQ_SIZE 25
 
@@ -110,7 +111,7 @@ typedef struct{
 typedef struct {
 	int flag;
 	MQ Message_Queue[messageQ_SIZE];
-}msgq_pt[1];
+}msgq_pt;
 
 /*typedef struct{
 	unsigned char prio;

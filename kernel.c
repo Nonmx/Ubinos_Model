@@ -241,7 +241,7 @@ int mutex_unlock(mutex_pt mutex)
 			mutex[0].owner = temp_tid;
 			mutex[0].lock_counter = 1;
 			push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid], PREEMPT);//readyQ로 추가해서 바로 실행하지 않는다.
-			return reschedule(BIN,current_tid); // 높은 priority 인 TASK가 있으면 preempt 해야 한다.
+			return reschedule(API_mutex_unlock,current_tid); // 높은 priority 인 TASK가 있으면 preempt 해야 한다.
 			
 		}
 
