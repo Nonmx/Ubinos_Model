@@ -1,7 +1,11 @@
 #include "ubinos.h"
 task_static_config task_static_info[NUM_OF_TASKS];
 task_dynamic_stat task_dyn_info[NUM_OF_TASKS];
+<<<<<<< HEAD
 unsigned char task_state[NUM_OF_TASKS] = { 0 };
+=======
+unsigned char task_state[NUM_OF_TASKS] = {0};
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 unsigned char Ceiling_Prio[2];
 
 
@@ -10,11 +14,19 @@ void initialize() {
 
 
 	task_static_info[1].max_act_cnt = 1;
+<<<<<<< HEAD
 	task_static_info[1].prio = 3;
 
 
 	task_static_info[2].max_act_cnt = 1;
 	task_static_info[2].prio = 2;
+=======
+	task_static_info[1].prio = 1;
+
+
+	task_static_info[2].max_act_cnt = 1;
+	task_static_info[2].prio = 1;
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 
 	task_static_info[3].max_act_cnt = 1;
 	task_static_info[3].prio = 1;

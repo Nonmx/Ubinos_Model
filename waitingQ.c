@@ -15,7 +15,11 @@ void push_task_into_WQ(unsigned char tid, unsigned char p)
 		printf("waittingQ is full!\n");
 		//return 0;
 	}
+<<<<<<< HEAD
 	else
+=======
+	else 
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 	{
 		//printf("enQ -> rear: %d\n\n", Rear);
 		task_state[tid] = Blocked;
@@ -40,7 +44,11 @@ void push_task_into_WQ(unsigned char tid, unsigned char p)
 
 
 
+<<<<<<< HEAD
 void get_task_from_WQ(unsigned char* tid, unsigned char* prio) //not running
+=======
+void get_task_from_WQ(unsigned char *tid, unsigned char *prio) //not running
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 {
 	if (empty())
 	{
@@ -65,7 +73,11 @@ void get_task_from_WQ(unsigned char* tid, unsigned char* prio) //not running
 		PRIORITY = *prio;
 		while (!SIZE[PRIORITY] && PRIORITY != 0)
 		{
+<<<<<<< HEAD
 			PRIORITY--;
+=======
+			PRIORITY -- ;
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 		}
 	}
 

@@ -16,7 +16,11 @@ static __inline char is_idle()
 	int i;
 	for (i = 0; i < NUM_OF_TASKS; i++)
 	{
+<<<<<<< HEAD
 		if (task_state[i] == Running)
+=======
+		if(task_state[i] == Running)
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 			a++;
 	}
 	return a > 0 ? 0 : 1;
@@ -28,18 +32,30 @@ static __inline char is_sleeping()
 	int i;
 	for (i = 0; i < NUM_OF_TASKS; i++)
 	{
+<<<<<<< HEAD
 		if (task_state[i] == Blocked)
+=======
+		if(task_state[i] == Blocked)
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 			a++;
 	}
 	return a > 0 ? 1 : 0;
 }
 
+<<<<<<< HEAD
 static __inline char Hava_to_RR()// readyQ???? ???????? task?? ????? priority????? check
+=======
+static __inline char Hava_to_RR()// readyQ에서 수행중인 task과 똑같은 priority있는지 check
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 {
 	char a = 0;
 	int i = 0;
 	//for (i = 0; i < MAX_QUEUE_LENGTH; i++)
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 	if (task_static_info[readyQ[current_prio][front[current_prio]].tid].prio == current_prio)
 		return 1;
 	else

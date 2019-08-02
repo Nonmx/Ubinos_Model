@@ -15,12 +15,20 @@ Date: 08/09/2016
 #include "mylib.h"
 
 
+<<<<<<< HEAD
 extern unsigned char e_code = 0;
+=======
+extern unsigned char e_code;
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 
 //local var for ceiling priority
 unsigned char current_prio = 0;
 signed char current_tid = 0;
+<<<<<<< HEAD
 int current_pc[NUM_OF_TASKS + 1];
+=======
+int current_pc[NUM_OF_TASKS+1];
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 
 /*functions*/
 

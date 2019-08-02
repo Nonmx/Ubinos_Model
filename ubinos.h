@@ -33,10 +33,17 @@ typedef enum state {
 }State;
 
 typedef enum API {
+<<<<<<< HEAD
 	API_task_create,
 	API_task_suspend,
 	API_TerminateTask,
 	API_task_resume,
+=======
+	API_task_create, 
+	API_task_suspend, 
+	API_TerminateTask, 
+	API_task_resume, 
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 	API_task_sleep,
 	API_sem_take,
 	API_msgq_receive,
@@ -47,7 +54,11 @@ typedef enum API {
 }API;
 extern API api;
 
+<<<<<<< HEAD
 typedef enum Mess {
+=======
+typedef enum Mess{
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 	PB_KEY_CHANGE_EVT,
 	PB_BATT_EVT,
 	PB_TIME_EVT,
@@ -88,23 +99,39 @@ typedef struct {
 }task_dynamic_stat;
 
 typedef struct {
+<<<<<<< HEAD
 	int flag;// -1 = mutex ¾ø´Ù, 0 = unlocked, 1 = locked
 	unsigned char owner;//locked °¡Áö°í ÀÖ´Â  task
 	unsigned int lock_counter;
 	int lock_call[NUM_OF_TASKS];
 	unsigned int tra_flag;
+=======
+	 int flag;// -1 = mutex ì—†ë‹¤, 0 = unlocked, 1 = locked
+	 unsigned char owner;//locked ê°€ì§€ê³  ìžˆëŠ”  task
+	 unsigned int lock_counter;
+     	 int lock_call[NUM_OF_TASKS];
+	 unsigned int tra_flag;
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 }mutex_pt;
 
 
 typedef struct {
 	int counter;
 	unsigned int lock_call[NUM_OF_TASKS];
+<<<<<<< HEAD
 	//unsigned char Lock; //locked?? task ????
+=======
+	//unsigned char Lock; //lockedï¿½ï¿½ task ï¿½ï¿½ï¿½ï¿½
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 }sem_pt;
 
 #define messageQ_SIZE 25
 
+<<<<<<< HEAD
 typedef struct {
+=======
+typedef struct{
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 	unsigned char message[messageQ_SIZE];
 }MQ;
 
@@ -123,7 +150,11 @@ extern unsigned char current_prio;
 extern signed char current_tid;
 
 //Current current[NUM_OF_TASKS];
+<<<<<<< HEAD
 extern int current_pc[NUM_OF_TASKS + 1];
+=======
+extern int current_pc[NUM_OF_TASKS+1];
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 
 extern unsigned char e_code;
 

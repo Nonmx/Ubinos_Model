@@ -35,7 +35,11 @@ int reschedule(API api, unsigned char);
 int Round_Robin_Schedule();
 void push_task_into_readyQ(unsigned char t, unsigned char p, int pc, push_type flag);
 void get_task_from_readyQ(unsigned char* t, unsigned char* p);
+<<<<<<< HEAD
 //mutex °¡Áö°í ÀÖ´Â task ²¨³»±â 
+=======
+//mutex ê°€ì§€ê³  ìžˆëŠ” task êº¼ë‚´ê¸° 
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 void get_task_from_readyQ_position(unsigned char*, unsigned char*, mutex_pt*);
 //void get_task_form_readyQ_RR(unsigned char *t, unsigned char *p, int);
 void initializeQueue();

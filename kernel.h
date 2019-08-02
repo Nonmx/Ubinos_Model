@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
 kernel.h 
+=======
+kernel.h includes prototype of API of ubinos OS
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 Mapping from OSEK OS model
 
 Date:05/20/2019
@@ -45,12 +49,20 @@ int sem_delete(sem_pt*);
 int sem_take(sem_pt*);
 int sem_give(sem_pt*);
 int sem_take_timed(sem_pt*, unsigned int);
+<<<<<<< HEAD
 int sem_time_checker(sem_pt*, unsigned char);
 
 //part of messahe Q
 int msgq_create(msgq_pt*, unsigned int, unsigned int);
 int msgq_receive(msgq_pt*, unsigned char*);
 int msgq_send(msgq_pt*, unsigned char*);
+=======
+
+//part of messahe Q
+int msgq_create(msgq_pt*,unsigned int,unsigned int);
+int msgq_receive(msgq_pt*,unsigned char*);
+int msgq_send(msgq_pt*,unsigned char*);
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 
 
 extern int os_on;

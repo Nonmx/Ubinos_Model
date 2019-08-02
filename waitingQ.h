@@ -20,7 +20,11 @@ unsigned char TID[1];
 unsigned char PRI[1];
 
 
+<<<<<<< HEAD
 int SIZE[MAX_PRIORITY + 1];
+=======
+int SIZE[MAX_PRIORITY+1];
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 int WHOLESIZE;
 #define full(p) (SIZE[(p)] == QSIZE-1)
 #define empty() (WHOLESIZE == 0)

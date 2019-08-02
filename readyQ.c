@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*
+=======
+﻿/*
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 readyQ.c implements functions related to ready queue.
 We assume that ready queue is a circular queue, with queue size 10.
 MAX QUEUE LENGTH can be changed.
@@ -114,7 +118,11 @@ void get_task_from_readyQ(unsigned char* t, unsigned char* p)
 		//if (task_state[*t][act_counter[*t]] == Running)
 			//act_counter[*t]++;
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 }
 
 
@@ -151,7 +159,11 @@ extern signed char current_tid;
 extern unsigned char current_prio;
 
 int reschedule(API api, unsigned char tid) { //work for priority scheduling
+<<<<<<< HEAD
 	if (is_idle() || api == API_TerminateTask || api == API_task_sleep || api == API_sem_take || api == API_msgq_receive || api == API_mutex_lock)
+=======
+	if (is_idle() || api == API_TerminateTask || api == API_task_sleep || api == API_sem_take|| api == API_msgq_receive || api == API_mutex_lock )
+>>>>>>> 59709d25f7c376cd156b035c7f3ec64a43fd4d61
 	{
 		get_task_from_readyQ(&current_tid, &current_prio);
 		if (current_tid == -1)
