@@ -28,8 +28,8 @@ int task_create(unsigned char reftask)
 {
 	api = API_task_create;
 
-	if (task_static_info[reftask].max_act_cnt == 0)
-		initialize();
+//	if (task_static_info[reftask].max_act_cnt == 0)
+//		initialize();
 
 	//check whether max activation count has been reached
 	if (reftask < 0 || reftask > NUM_OF_TASKS)
@@ -148,6 +148,9 @@ int mutex_create(mutex_pt* mutex)
 {
 	mutex->flag = 0; // mutex »ý¼º
 	mutex->owner = 0;
+	mutex->lock_counter = 0;
+//	mutex->lock_call[NUM_OF_TASKS] = 0;
+	mutex->tra_flag = 0;
 
 	return 1;
 }
@@ -427,7 +430,7 @@ void ubik_comp_start()
 	if (os_on == OFF)
 	{
 		os_on = ON;
-		running(); //call tasks here
+//		running(); //call tasks here
 	}
 }
 
